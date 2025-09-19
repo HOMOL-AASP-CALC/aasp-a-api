@@ -1,0 +1,56 @@
+
+require('dotenv').config()  
+const mysql = require('mysql2')
+const axios = require('axios').default;
+var calcUtil = require('./calcUtil.js');
+
+var con = null; 
+
+this. mysql_senha = process.env.MYSQL_password
+if (process.env.MYSQL_host != "localhost") {
+    this.mysql_senha = this.mysql_senha+"#";
+}
+this.mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: this.mysql_senha, database: 'debit' }
+
+this.handleDisconnect = function() {
+    con =   mysql.createPool(this.mysql_info).promise() // mysql1.createConnection(mysql_info); 
+
+    con.on('error', function(err) {
+        console.log('---- mysql desconectou ---- ', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') { 
+            handleDisconnect(); 
+        } else { 
+            throw err; 
+        }
+    });
+}
+
+this.handleDisconnect();
+
+
+const enviaSlack = (idLogin, str) => {
+    let dados = {"text": `${idLogin} - ${str} abandonou o carrinho`}
+    console.log(dados)
+    axios.post(`https://hooks.slack.com/services/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`, dados  )
+}
+
+const consulta1 = async () => {
+    var d = calcUtil.dia2yyyymmdd( calcUtil.diaHoje() )
+    // var d = '20231002'
+    var q  = `SELECT assina_pedido.id_login as id_login, login.nome as nome, login.email as email FROM assina_pedido, login WHERE (operacao = 'N' or operacao = '') and dia_criado='${d}'  AND  dia_vcto < '${d}' AND (login.id = assina_pedido.id_login)  group by id_login order by login.id desc`
+    var [r] =  await con.query(q) 
+    // console.log(q)
+    console.table(r)
+
+    for (var i in r) {
+        // enviaSlack(r[i].id_login, r[i].nome+' - '+r[i].email)
+    }
+
+    return (r)
+}
+
+consulta1()
+console.log('-- fim -- ')
+
+// enviaSlack('aa', 'bb')
+
