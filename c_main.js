@@ -31,7 +31,7 @@ const cors1 = {
     credentials: true
 }
 
-var mysql_senha = process.env.MYSQL_password
+var mysql_senha = process.env.MYSQL_password2
 var listaTabelas  = [] 
 var tabelas = {} 
 var tabelaPrevReajuste = {}
@@ -40,22 +40,18 @@ var cs1 = require('./calc.js')
 var calcServerAtualiza = new cs1() 
 
 
-if (process.env.MYSQL_host != "localhost") {
-	mysql_senha = mysql_senha+"#";
-}
-
 const mysql = require('mysql2')  
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 var mysql_info2 ={
-    host: process.env.awsMYSQL_host, 	
-    user: process.env.awsMYSQL_user,	
-    password: process.env.awsMYSQL_password, 
-    database:  'calculos', multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
+    host: process.env.MYSQL_host, 	
+    user: process.env.MYSQL_user,	
+    password: process.env.MYSQL_password2, 
+    database:  process.env.MYSQL_database_calculos, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 var mysql_info3 ={
-    host: process.env.awsMYSQL_host, 	
-    user: process.env.awsMYSQL_user,	
-    password: process.env.awsMYSQL_password, 
-    database:  'debit_controle', multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
+    host: process.env.MYSQL_host, 	
+    user: process.env.MYSQL_user,	
+    password: process.env.MYSQL_password2, 
+    database:  process.env.MYSQL_database_controle, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 
 
 var calcMem = { prevDifNRecebidas: {}, cartaoPonto: {}, calculosJudiciais: {}, saldoDevedor: {}, tabelasJudiciais: {}, tabelasFinanciamento: {}, atualizacaoMonetaria: {}, prevCT: {}, calculoTrabalhista: {} }
@@ -140,6 +136,7 @@ var conControle = mysqlDisconnect(mysql_info3)
 // var conControle = mysqlDisconnect('debit_controle')
 
 const setarTabelas = function() {
+    // console.table(tabelas[31])
     calculadora.tabelasJudiciais.setVariaveis( { tabelas } )
     calculadora.atualizacaoMonetaria.setVariaveis( { calcServerAtualiza, con } )
     calculadora.saldoDevedor.setVariaveis( { tabelas } )
@@ -147,8 +144,6 @@ const setarTabelas = function() {
     calculadora.calculosJudiciais.setVariaveis( { tabelas, tabJ: calculadora.tabelasJudiciais, tabelaMaximo:listaTabelas } )
     calculadora.prevDifNRecebidas.setVariaveis( { tabelaPrevReajuste, tabelas, tabJ: calculadora.tabelasJudiciais } )
 }
-
-setarTabelas() 
 
 calculadora.calculosJudiciais.leTabelaJudicial = async function (id) { return leArquivo('tabelasJudiciais', id) }   
 calculadora.prevDifNRecebidas.leTabelaJudicial = async function (id) { return leArquivo('tabelasJudiciais', id) }   
@@ -175,7 +170,6 @@ app.get('/calculosDiversos/listaTabelas', async  function(req, res) {
 
 app.post('/calculosDiversos/uploadArq', async function(req, res) {
     let d = req.body 
-    console.log(d)
     let nomeArq = process.env.uploadDir+'/'+d.idCalc+'.pdf'
 
     if (!req.files || Object.keys(req.files).length === 0) {
@@ -252,7 +246,7 @@ app.get('/calculosDiversos/listaIndicesPerc',  function(req, res) {
 })  
 
 app.get('/calculosDiversos/leIndiceMesclado/:id',  function(req, res) {
-    console.log('leIndiceMesclado leIndiceMesclado')
+    // console.log('leIndiceMesclado leIndiceMesclado')
     if (!req.params.id || req.params.id==0 || typeof req.params.id === 'undefined' ) {
         res.send({
             nome: '',
@@ -601,11 +595,22 @@ const leArquivo = async function (tipo, id) {
 
 app.post('/calculosDiversos/tabelaDireta',  async function(req, res) {
     let param = req.body
+    // console.log('tabelaDireta', JSON.stringify(param) )
+
+    if (!param.indexador || typeof param.indexador === 'undefined') {
+        res.send( { erro: 'Falta o indexador' } )
+        return;
+    }
+
     let r = await calculadora.calculosJudiciais.tabelaDireta( param )
 
     for (let i in r.tabela) {
         if (r.tabela[i].indexador >= 0) {
-            r.tabela[i].indexadorStr = listaTabelas[ r.tabela[i].indexador ] .nome // JSON.stringify( listaTabelas[ r.tabela[i].indexador ] )
+            if (typeof listaTabelas[ r.tabela[i].indexador ] !== 'undefined') {
+                r.tabela[i].indexadorStr = listaTabelas[ r.tabela[i].indexador ] .nome ;
+            } else {
+                r.tabela[i].indexadorStr = 'Índice não encontrado'
+            }
         }
     }
     // console.table(r.tabela)
@@ -766,6 +771,9 @@ app.get('/calculosDiversos/copiar/:tipo/:id',  async function(req, res) {
     agora1 = agora1.substring(0,12)
     let q = `INSERT INTO ${tipo} (nome, id_login, id_multiusuario, diahora, ativo) SELECT CONCAT(nome, ' - cópia'), id_login, id_multiusuario, "${agora1}", 1 FROM ${tipo} WHERE id="${id}" AND id_login="${c.v_id_dono}" ` 
     console.log(q)
+    if (tipo == "cartaoPonto") {
+        q = `INSERT INTO ${tipo} (nome, tipo, id_login, id_multiusuario, diahora, ativo) SELECT CONCAT(nome, ' - cópia'), 6, id_login, id_multiusuario, "${agora1}", 1 FROM ${tipo} WHERE id="${id}" AND id_login="${c.v_id_dono}" `
+    }
     let [ r ] = await conCalculos.promise().query(q)
     // console.log(r)
     let novoId = r.insertId
@@ -1180,7 +1188,7 @@ server.listen(porta_api, () => {
 
 
 function cookie_uncrypt(cookie_criptografado) {
-	const key = process.env.cookie_key 
+	const key = process.env.cookie_key  
 	const interacoes = 481 //!IMPORTANTE: deixar igual ao php no verifica login
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()
@@ -1197,10 +1205,16 @@ function cookie_uncrypt(cookie_criptografado) {
 
 const le_tabelas = async function () {
     var [res1] =  await con.promise().query('select indice, maximo, nome, calculo, tabela, inicio, mesclavel, ativo_novo_atualiza from maximo where (ativo=1 or ativo_novo_atualiza=1)  order by nome') 
+    var d1 = 0
 
     listaTabelas  = []
     for (var i in res1) {
         listaTabelas[ res1[i].indice ] = res1[i]
+        if (res1[i].indice == 23) {
+            listaTabelas[31] = JSON.parse( JSON.stringify(res1[i]) ) 
+            listaTabelas[31].indice = 31
+            listaTabelas[31].nome = 'Selic + 1% (RFB)'
+        }
     }
 
     for (var i in listaTabelas) {
@@ -1214,11 +1228,18 @@ const le_tabelas = async function () {
             
             tabelas[ id ] =  [ ] 
             for (var k in res2) {	
-                var d1 = calcUtil.yyyymmdd2intMesAno( res2[k].dia.toString() ) 
+                d1 = calcUtil.yyyymmdd2intMesAno( res2[k].dia.toString() ) 
                 tabelas[ id ][ d1 ] = res2[ k ]
             }
         }
+
+        if (id == 31) { // SELIC Receita Federal  (31) - copia a Selic normal e acrescenta 1% no último mês
+            d1++ 
+            tabelas[31] = JSON.parse( JSON.stringify(tabelas[31]) ) // igual a SELIC 
+            tabelas[31][d1] = { dia: parseInt(calcUtil.mesAno2dinv(d1)), valor: 1 } // coloca no ultimo mês o valor 1
+        }
     }
+
 
     listaTabelaCache =  listaTabelas
                         .filter( (e) => { return e.ativo_novo_atualiza == 1 } )
@@ -1237,6 +1258,7 @@ const le_tabelas = async function () {
         tabelaPrevReajuste[ aaa[x].diai ] = { percentual: aaa[x].percentual, mesReajuste: aaa[x].mesReajuste }
     }
     setarTabelas() 
+    // console.table(tabelas[31])
     // console.log(mysql_info, tabelaPrevReajuste)
 
 }

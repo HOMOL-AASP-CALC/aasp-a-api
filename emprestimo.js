@@ -21,12 +21,11 @@ const cors1 = {
     credentials: true
 }
 
-var mysql_senha = process.env.MYSQL_password
+var mysql_senha = process.env.MYSQL_password2 
 if (process.env.MYSQL_host == "localhost") {
 	cors1.origin = "http://atualiza.fastbet.win"
-} else {
-	mysql_senha = mysql_senha+"#";
-}
+} 
+
 const mysql = require('mysql2')  
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database }
 const con = mysql.createPool(mysql_info).promise()
@@ -175,8 +174,8 @@ function  agora() {
 
 
 function cookie_uncrypt(cookie_criptografado) {
-	const key = process.env.cookie_key 
-	const interacoes = 481 //!IMPORTANTE: deixar igual ao php no verifica login
+	const key = process.env.cookie_key  
+	const interacoes = 481
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()
 	const cookie_descriptografado = encryption.decrypt(cookie_criptografado, key, interacoes)

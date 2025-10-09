@@ -50,24 +50,16 @@ const calcHTML = require('./atualizaHTML_v3_1.js');
 
 var socketList = [] 
 
-// const cors1 = {
-//     origin: "https://atualiza.debit.com.br",
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     credentials: true
-// }
-
-var mysql_senha = process.env.MYSQL_password
+var mysql_senha = process.env.MYSQL_password2 
 var caminho = '/w'+porta_api;
 
-if (process.env.MYSQL_host != "localhost") {
-	mysql_senha = mysql_senha+"#";
-}
+// if (process.env.MYSQL_host != "localhost") {
+// 	mysql_senha = mysql_senha+"#";
+// }
 const mysql = require('mysql2')  
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 
 var con2 = null 
-
-
 
 const allowedDomains = ['http://fastbet.win', 'https://www.debit.com.br', 'http://calcs.fastbet.win', 
                         'https://calcs.debit.com.br','http://www.fastbet.win',"http://atualiza.fastbet.win",
@@ -670,11 +662,21 @@ async function  analiseTabelaTJ( idCalc, idTabelaTJ ) {
 		calc[ idCalc ].info.resumoTJ = resumo  
 		calc[ idCalc ].info.indexador = idTabelaTJ
 		calc[ idCalc ].info.multi_interno = false 
+		calc[ idCalc ].info.mostrar_selic = false
 
 		if (resumo[u].indexador == 23) { // se for selic
 			calc[ idCalc ].info.calc_selic = true
+			calc[ idCalc ].info.mostrar_selic = true
 			calc[ idCalc ].info.selic_inicio = '01/'+calcUtil.mesAno2dia(resumo[u].inicio)
 		}
+
+		if (resumo[u].indexador == 31) { // selic Receita Federal
+			calc[ idCalc ].info.calc_selic = false
+			calc[ idCalc ].info.mostrar_selic = true
+			calc[ idCalc ].info.selic_inicio = '01/'+calcUtil.mesAno2dia(resumo[u].inicio)
+		}
+	}).catch( function(err) {
+		console.log('erro axios atualiza.js - nao consegui acessar a tabelaDireta l: 679 - ', url1)
 	})
 
 
@@ -783,6 +785,8 @@ io.on('connection',  (socket) => {
 		}
 
 		if (campo == 'info.indexador') {
+			calc[ idCalc ].info.mostrar_selic = false
+			
 			if (info >= 200 & info < 300) {
 				calc[ idCalc ].info.multi_interno = true
 				calc[ idCalc ].info.modo_indexador = "um"
@@ -815,7 +819,9 @@ io.on('connection',  (socket) => {
 				calc[ idCalc ].info.multi_interno = false
 			}
 
-			if (info>=1000 && calc[ idCalc ].modo_indexador == 'um') {
+			// console.log('passei 819 - ', info, calc[ idCalc ].info.modo_indexador)
+			if (info>=1000 && calc[ idCalc ].info.modo_indexador == 'um') {
+				// console.log('analisando tabela judicial ', info)
 				await analiseTabelaTJ( idCalc, info )
 			} else {
 				calc[ idCalc ].info.resumoTJ = [] 
@@ -1085,7 +1091,7 @@ salvarCalc = function ( idCalc ) {
 }
 
 function cookie_uncrypt(cookie_criptografado, headers) {
-	const key = process.env.cookie_key //!IMPORTANTE: deixar igual ao php no verifica login
+	const key = process.env.cookie_key   //!IMPORTANTE: deixar igual ao php no verifica login
 	const interacoes = 481 //!IMPORTANTE: deixar igual ao php no verifica login
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()
