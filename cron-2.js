@@ -13,11 +13,11 @@ const apikey = {
 
 var con = null; 
 
-this. mysql_senha = process.env.MYSQL_password
-if (process.env.MYSQL_host != "localhost") {
-    this.mysql_senha = this.mysql_senha+"#";
-}
-this.mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: this.mysql_senha, database: 'debit' }
+this. mysql_senha = process.env.MYSQL_password2 
+// if (process.env.MYSQL_host != "localhost") {
+//     this.mysql_senha = this.mysql_senha+"#";
+// }
+this.mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: this.mysql_senha, database: process.env.MYSQL_database }
 
 this.handleDisconnect = function() {
     con =   mysql.createPool(this.mysql_info).promise() // mysql1.createConnection(mysql_info); 
@@ -321,7 +321,7 @@ const enviaResultadosAtualizadosCJ = async () => {
 
 const pegaEmail = async (idCalc, ferramenta) => {
     if (ferramenta == 'tabelaFinanciamento') {
-        ferramenta = 'tabela_financiamentos'
+        ferramenta = 'tabelasFinanciamento'
     }
     let q = 'select debit.login.*, calculos.'+ferramenta+'.* from debit.login, calculos.'+ferramenta+' where debit.login.id=calculos.'+ferramenta+'.id_login and calculos.'+ferramenta+'.id='+idCalc
     console.log(q)

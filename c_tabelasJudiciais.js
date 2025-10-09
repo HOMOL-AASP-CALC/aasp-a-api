@@ -12,11 +12,18 @@ module.exports = function() {
         return r
     }
 
+    this.somaValores = function(v1, v2) {
+        let a1 = parseInt(v1*10000)
+        let a2 = parseInt(v2*10000)
+        return (a1 + a2) / 10000;
+    }
+
     this.calcular = (d) => {
         // console.log(JSON.stringify(d))
         let valorList = []
         let i = calcUtil.dia2intMesAno('01/10/1964')
         let f = calcUtil.dia2intMesAno( calcUtil.diaHoje() )
+        // let f = calcUtil.dia2intMesAno( '01/12/2025')
 
         let si = 30000 
         if (d.selic_calc && d.selic_inicio) {
@@ -45,7 +52,6 @@ module.exports = function() {
             }
             let i1 = vlx.i 
             if (d.selic_calc && si <= x) {  i1 = 23; }
-            // valorList.push({ mesano: x, ano: calcUtil.mesAno2intAno(x), indexador: vlx.i, especial: vlx.e, indiceGerado: 0, indiceOriginal: 0 })
             valorList.push({ m: x, ano: calcUtil.mesAno2intAno(x), i: i1, especial: vlx.e, indiceGerado: 0, indiceOriginal: 0 })
         }
 
@@ -54,6 +60,7 @@ module.exports = function() {
         let selicAcumulada = 0
         let selicConsolidada = 0
         let aIndexador1 = -100
+              
         
         for (let x = l; x >= 0; x--) {
             let indexador1 = valorList[x].i 
@@ -109,10 +116,18 @@ module.exports = function() {
                     if (tabelas[ indexador1 ][ mesano1 ]) {
                         selicAcumulada += tabelas[ indexador1 ][ mesano1 ].valor 
                     } 
-                    // implementação não concluída do corte de zeros
-                    // if (mesano1 == 23867) { // dez/88
-                    //     indiceGerado /= 1000
-                    // } 
+                }
+
+                // SELIC SIMPLES
+                if (indexador1 == 31)  {
+                    
+                    if (tabelas[ indexador1 ][ mesano1 ]) {
+                        let v1 = tabelas[ indexador1 ][ mesano1 ].valor 
+                        if (mesano1 == f) { v1 = 1; tabelas[ indexador1 ][ mesano1 ].valor = 1;  }
+                        if (mesano1 > f)  { v1 = 0; tabelas[ indexador1 ][ mesano1 ].valor = 0;  }
+                        
+                        selicAcumulada += v1
+                    } 
                 }
 
                 // SELIC CAPITALIZADA

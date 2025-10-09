@@ -5,16 +5,16 @@ const mysql = require('mysql2/promise')
 const calcUtil = require('./calcUtil.js')
 
 async function main() {
-    let mysqlPassword = process.env.MYSQL_password
-    if (process.env.MYSQL_host !== 'localhost') {
-        mysqlPassword = mysqlPassword + '#'
-    }
+    let mysqlPassword = process.env.MYSQL_password2
+    // if (process.env.MYSQL_host !== 'localhost') {
+    //     mysqlPassword = mysqlPassword + '#'
+    // }
 
     const con = mysql.createPool({
         host: process.env.MYSQL_host,
         user: process.env.MYSQL_user,
         password: mysqlPassword,
-        database: 'calculos'
+        database: process.env.MYSQL_database_calculos
     })
 
     const [rows] = await con.query('SELECT id FROM atualizacaoMonetaria where tipo="a3" ')

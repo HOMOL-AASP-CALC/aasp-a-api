@@ -26,13 +26,14 @@ const cors1 = {
     credentials: true
 }
 
-var mysql_senha = process.env.MYSQL_password
+var mysql_senha = process.env.MYSQL_password2 
 if (process.env.MYSQL_host == "localhost") {
 	cors1.origin = "http://app.fastbet.win"
 } 
-else {
-	mysql_senha = mysql_senha+"#";
-}
+// else 
+// 	{
+// 	mysql_senha = mysql_senha+"#";
+// }
 
 const allowedDomains = ['https://debit-www6.pages.dev','http://fastbet.win', 'http://calcs.fastbet.win', 'https://calcs.debit.com.br',
                         'http://app.fastbet.win', 'https://app.debit.com.br',
@@ -151,12 +152,7 @@ const mysqlDisconnect = function(m_info) {
     return m1;
 }
 
-// var mysql_info2 ={
-//     host: process.env.awsMYSQL_host, 	
-//     user: process.env.awsMYSQL_user,	
-//     password: process.env.awsMYSQL_password, 
-//     database:  'calculos' }
-var mysql_info2 = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: 'calculos' }
+var mysql_info2 = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database_calculos }
 var conCalculos = mysqlDisconnect(mysql_info2)
 
 

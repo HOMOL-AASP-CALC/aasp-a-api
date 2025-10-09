@@ -32,15 +32,15 @@ const cors1 = {
     credentials: true
 }
 
-var mysql_senha = process.env.MYSQL_password
+var mysql_senha = process.env.MYSQL_password2 
 
 if (process.env.MYSQL_host == "localhost") {
 	cors1.origin = "http://app.fastbet.win"
 } 
-else {
-	mysql_senha = mysql_senha+"#";
-// 	var caminho = '/atualizaSocket/' 
-}
+// else {
+// 	mysql_senha = mysql_senha+"#";
+// // 	var caminho = '/atualizaSocket/' 
+// }
 const mysql = require('mysql2')  
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database }
 
@@ -103,9 +103,9 @@ const mysqlDisconnect = function(m_info) {
 }
 
 var mysql_info2 ={
-    host: process.env.awsMYSQL_host, 	
-    user: process.env.awsMYSQL_user,	
-    password: process.env.awsMYSQL_password, 
+    host: process.env.MYSQL_host, 	
+    user: process.env.MYSQL_user,	
+    password: process.env.MYSQL_password2, 
     database:  'calculos' }
 var conCalculos = mysqlDisconnect(mysql_info2)
 
@@ -260,7 +260,8 @@ function formataN(n) {
 }
 
 function cookie_uncrypt(cookie_criptografado) {
-	const key = process.env.cookie_key 	
+
+	const key = 'd2f7ea0c8f811d44854d068a6f55b3ba8db3c1d75f3a6d2c46f1a2e7d6d87e6f' //!IMPORTANTE: deixar igual ao php no verifica login
 	const interacoes = 481 //!IMPORTANTE: deixar igual ao php no verifica login
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()

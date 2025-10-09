@@ -170,6 +170,7 @@ module.exports = function() {
 		}
 		
 		let dia1 = calcUtil.somaMes(dia)
+		
 		while ( calcUtil.dia2yyyymmddInt( calcUtil.strPrimeiroDia(dia1)  ) <= calcUtil.dia2yyyymmddInt(dia2) ) {
 			let indexadorStr = '' 
 			let d1 =  calcUtil.dia2intMesAno( dia1 ) 
@@ -186,7 +187,7 @@ module.exports = function() {
 				indexadorStr = `(${tj[ d1 ].indexadorStr})`
 			} 
 			if (tj[d1].indexador > 1 && tj[d1].indexador != 73) {
-				indexadorStr = `(${tj[ d1 ].indexadorStr}: ${calcUtil.formataNum(variacao1,2)}%)`
+				indexadorStr = `(${tj[ d1 - 1 ].indexadorStr}: ${calcUtil.formataNum(variacao1,2)}%)`
 			}
 			
 			let avalor = valor 
@@ -468,38 +469,39 @@ module.exports = function() {
 	}
 
 	this.pegasoma = async function (dia1, dia2, tabela, adicionar_mes_soma=1, calc_prorata=false) { 
-	  let casasDecimais = (tabela == 109) ? 6 : 2 
-	  var dia0 = dia1 
-	  var dia2original = dia2
-	  var resultado = 0;
-	  var resultadoDetalhado = []
-	
-	  if (tabela==72)  {  // selic_receita
-		if (adicionar_mes_soma) dia1 = calcUtil.somaMes(dia1);
-		dia2 = calcUtil.diminuiMes( dia2 );
-		resultado = 1;
-		tabela = 23
-	  }
+	  	let casasDecimais = (tabela == 109) ? 6 : 2 
+	  	let dia0 = dia1 
+	  	let dia2original = dia2
+		let resultado = 0;
+	  	let resultadoDetalhado = []
 
-	  primeiro_dia1 = calcUtil.yyyymmdd2intMesAno( calcUtil.dia2yyyymmdd(dia1) )
-	  primeiro_dia2 = calcUtil.yyyymmdd2intMesAno( calcUtil.dia2yyyymmdd(dia2) ) 	  
+		let tabela1 = JSON.parse( JSON.stringify( this.tabelas[ tabela ] )) 
 
-	// console.table( this.tabelas[tabela] )
-	// console.log('primeiro_dia1, primeiro_dia2', primeiro_dia1, primeiro_dia2)
-	
-	if (primeiro_dia1 > primeiro_dia2) {
-		return { resultado: 0};
-	}
-	
-	resultado = new BigNumber(0);
-	for (let e1 = primeiro_dia1;  e1 <= primeiro_dia2; e1++) {
-		let e = this.tabelas[tabela][e1]
-		if (e && e.valor!=-100) {
-			// console.log('somando:  ',e .valor)
-			resultado = resultado.plus(e.valor);
-			resultadoDetalhado.push( { dia: e.dia, valor: e.valor, resultado: resultado.toFixed(casasDecimais) } )
+		if (tabela==31 || tabela==72)  {  // selic_receita
+			if (adicionar_mes_soma) dia1 = calcUtil.somaMes(dia1);
 		}
-	}
+	  
+		primeiro_dia1 = calcUtil.yyyymmdd2intMesAno( calcUtil.dia2yyyymmdd(dia1) )
+		primeiro_dia2 = calcUtil.yyyymmdd2intMesAno( calcUtil.dia2yyyymmdd(dia2) ) 	  
+
+		if (primeiro_dia1 > primeiro_dia2) {
+			return { resultado: 0};
+		}
+
+		resultado = new BigNumber(0);
+		for (let e1 = primeiro_dia1;  e1 <= primeiro_dia2; e1++) {
+			let e = tabela1[e1]
+			let v = 0;
+			if (typeof e !== 'undefined' && typeof e.valor !== 'undefined') {
+				v = e.valor
+			}
+			
+			if ( e1 == primeiro_dia2) { v = 1;  }
+			if (e && v != -100) {
+				resultado = resultado.plus( v );
+				resultadoDetalhado.push( { dia: e.dia, valor: v, resultado: resultado.toFixed(casasDecimais) } )
+			}
+		}
 
 	
 	var tabelaUsada = this.tabelas[ tabela ]
@@ -516,7 +518,7 @@ module.exports = function() {
 				resultado = resultado - i1.valor + v1;  
 			}
 		} else {
-			// console.table(tabelaUsada)
+	
 			var ma1 = primeiro_dia1
 			var i1 = tabelaUsada[ ma1 ]
 			if (typeof i1 === 'undefined' || typeof i1.valor === 'undefined') {
@@ -530,7 +532,7 @@ module.exports = function() {
 			var i2 = tabelaUsada[ ma2 ]
 			if (typeof i2 === 'undefined' || typeof i2.valor === 'undefined') {
 				console.log('saindo - l 418 - erro no pro-rata - i2, tabela, primeiro_dia2 ', i2, tabela, primeiro_dia2)
-				// console.table(tabelaUsada)
+		
 				return 0
 			}
 			if (typeof i2 === 'undefined' || typeof i2.valor === 'undefined') {
@@ -895,7 +897,7 @@ module.exports = function() {
 			}
 		}
 
-		// console.table(rstr)
+
 		return { percentual: r, descricao: rstr } 
 	}
 
@@ -948,7 +950,7 @@ module.exports = function() {
 
 		// ultima alteração: 2020-10-20
 		if ( !cliente_assinante &&  dInt < diaCalculoGratuito && !c.api)  {
-			console.log('diaerro = 5: ', !cliente_assinante,  (dInt < diaCalculoGratuito), !c.api)
+			// console.log('diaerro = 5: ', !cliente_assinante,  (dInt < diaCalculoGratuito), !c.api)
 			return 5 // somente para assinantes
 		}
 		
@@ -1034,7 +1036,7 @@ module.exports = function() {
 		
 		var soma_deducoes_atualizacao = 0 
 		var soma_deducoes_selic = 0
-		let calculeiComSelic = false 
+		let calculeiComSelic = 0 
 		var tabelaJudicial = {} 
 
 		if (typeof c === 'undefined' || c==null) { console.log('erro ao tentar efetuar o cálculo (c)'); return {};  }
@@ -1103,17 +1105,22 @@ module.exports = function() {
 					c.info.calc_selic =	true 
 					c.info.selic_inicio = '01/' + calcUtil.mesAno2dia(c.info.resumoTJ[ultimoItem].inicio) 
 				}
-				// console.table(c.info.resumoTJ)
+		
 			}
 
 			if (c.info.indexador == 23 || c.info.indexador == 24 || c.info.indexador == 72 ) {
 				c.info.calc_selic = false
 			}
 
-			if (c.info.calc_selic) {
+			if (c.info.calc_selic || c.info.indexador == 1005) {
 				c.info.selic_fim = temp_dia_atualiza
-				if (calcUtil.dia2yyyymmddInt(c.info.selic_fim) >  parseInt(this.listaTabelas[ 23 ].maximo)) {
-					c.info.diaAtualizacaoErro = "Podemos atualizar somente até " + calcUtil.yyyymmdd2dia(this.listaTabelas[ 23 ].maximo.toString() )
+				let dia1 = parseInt(this.listaTabelas[ 23 ].maximo)
+				if (c.info.indexador == 1005) {
+					dia1 = calcUtil.somaMes( calcUtil.yyyymmdd2dia( this.listaTabelas[ 23 ].maximo.toString() ) )
+					dia1 = calcUtil.dia2yyyymmddInt(dia1)
+				}
+				if (calcUtil.dia2yyyymmddInt(c.info.selic_fim) >  dia1) {
+					c.info.diaAtualizacaoErro = "Podemos atualizar somente até " + calcUtil.yyyymmdd2dia( dia1 )
 				}
 			} else {
 				if (calcUtil.dia2yyyymmddInt(c.info.dia_atualiza) >  parseInt(infoIndice.maximo)) {
@@ -1223,8 +1230,8 @@ module.exports = function() {
 				// console.log('separarNeg', separarNeg)
 
 				// verifica se esta parcela tem selic =====
-				calculeiComSelic = false
-				if (c.info.calc_selic && 
+				calculeiComSelic = 0
+				if ((c.info.calc_selic || c.info.indexador==1005)  && 
 					(
 						(!c.lista[i].custas) ||
 						(c.lista[i].custas && typeof c.info.custas.selic !== 'undefined' && c.info.custas.selic == true ) ||
@@ -1234,11 +1241,11 @@ module.exports = function() {
 					c.info.selic_fim = temp_dia_atualiza
 					c.info.dia_atualiza = c.info.selic_inicio
 					
-					calculeiComSelic = true
+					calculeiComSelic = 23
 				} else {
 					c.info.dia_atualiza = temp_dia_atualiza
 				}
-				/// verifica se tem selic fim 		
+				/// verifica se tem selic fim 	
 
 				if (nLinha < 0 || nLinha == i ) {
 					c.lista[ i ].resultado_atualizacao = 0 
@@ -1262,18 +1269,18 @@ module.exports = function() {
 					// Correção Monetária 
 					
 					if (c.info.modo_indexador == 'um' && !c.info.multi_interno) {
-						let desvio1 = false
- 						
+						let desvio1 = false			
 						c.info.nomeIndexador = infoIndice.nome
 						if (infoIndice.calculo == "tabelasJudiciais") {
 							if ( calcUtil.dia2yyyymmddInt(dia_v) <= calcUtil.dia2yyyymmddInt(c.info.dia_atualiza) ) {
 								var temp2 = await this.a_tabelaJudicial( dia_v, c.lista[i].valor, c.info.dia_atualiza, c.info.tabelaJudicial )
+								// console.table( temp2.memoria)
 								temp1 = temp2.resultado
 							} else {
 								var temp2 = { memoria: [], memoriaSimples: '', resultado: c.lista[i].valor }
 								temp1 = c.lista[i].valor
 							}
-							
+							 							
 							desvio1 = true
 						}
 
@@ -1323,7 +1330,6 @@ module.exports = function() {
 					} 
 					
 					if (c.info.modo_indexador == 'personal'  && !c.info.multi_interno) {
-						
 						var infoIndice = await this.le_tabela_personalizada( c.info.indexador )
 
 						c.info.nomeIndexador = infoIndice.nome
@@ -1448,9 +1454,7 @@ module.exports = function() {
 					}
 					
 				}
-				
-				// if (calcUtil.dia2yyyymmddInt( c.lista[i].dia <= 19940701) {
-				// console.log(c.lista[i].dia)
+
 				if (c.lista[i].custas) {
 					soma_custas_desatualizado[ this.moedaUnica(c.lista[i].dia) ].valor  += parseFloat(c.lista[ i ].valor)
 				} else {
@@ -1546,6 +1550,11 @@ module.exports = function() {
 				if (c.info.calc_jurosm) {
 					var dia1 = c.lista[i].dia
 					var dia2 = c.info.dia_atualiza
+
+					if (typeof c.info.juros_moratorios === 'undefined') {
+						c.info.juros_moratorios = {"percentual":1,"tipo_calculo":"s","pro_rata":0,"a_partir":"vencimento","data_citacao":"","modo":"s","juros_detalhado":[{"inicio":"","fim":"","percentual":"0","tipo":"s"},{"inicio":"","fim":"","percentual":"0","tipo":"s"}] }
+					}
+
 					var info1 = c.info.juros_moratorios
 					var zerarCalc = false 
 					var alterarDatas = true
@@ -1554,11 +1563,9 @@ module.exports = function() {
 						// console.log('passei 1549')
 						if (c.lista[i].juros_moratorios.modo == 1) {
 							zerarCalc = true 
-							// console.log('passei 1551')
 						}
 
 						if (c.lista[i].juros_moratorios.modo == 2) {
-							// console.log('passei 1556')
 							alterarDatas = false 
 							info1 = {
 								a_partir: "vencimento",
@@ -1572,12 +1579,10 @@ module.exports = function() {
 						c.lista[i].juros_moratorios = JSON.parse(JSON.stringify(c.info.juros_moratorios))
 						c.lista[i].juros_moratorios.modo = 3
 					}
-						
 	
 					c.lista[ i ].resultado_jurosm_percentual = 0 
 					if (!zerarCalc) {
 						if (dia1 != '') {
-														// calcular os juros mes a mes
 							for (let j1 in c.lista[ i ].memoria) {
 								let m1 = c.lista[ i ].memoria[j1]
 
@@ -1592,13 +1597,11 @@ module.exports = function() {
 								}
 								m1.jurosm_v = base_jurosm * (pj1.percentual/100)
 							}
-							//-----
 
 							if (c.info.calc_selic) {
 								info1 = this.limitarJurosSelic(info1, c.info.selic_inicio)
 							}
 							
-							// console.log('passei 1603', info1)
 
 							let pj =  await this.pegaJurosCompleto(dia1, dia2, info1, alterarDatas)
 							c.lista[ i ].resultado_jurosm_percentual = pj.percentual
@@ -1707,15 +1710,19 @@ module.exports = function() {
 
 
 				// nova opc SELIC
+				if (c.info.indexador == 1005) {
+					calculeiComSelic = 72
+				}
+
 				c.lista[ i ].resultado_selic = 0 
 				c.lista[ i ].resultado_selic_percentual = 0 
-				c.lista[ i ].mostrarSelic = calculeiComSelic 
-				// if (c.info.calc_selic) {	
+				c.lista[ i ].mostrarSelic = (calculeiComSelic > 0) 
 
-				// console.log('l 1511: ', calculeiComSelic)
+				// console.log(': 1718 - calculeiComSelic',calculeiComSelic)
 
-				if (calculeiComSelic) {
-					let idTab = 23
+				if (calculeiComSelic>0) {
+					let idTab = calculeiComSelic
+					
 					c.lista[ i ].resultado_atualizacao = parseFloat(c.lista[ i ].resultado_atualizacao)
 					c.lista[ i ].base = c.lista[ i ].resultado_atualizacao + c.lista[ i ].resultado_jurosm + c.lista[ i ].resultado_jurosc + parseFloat( c.lista[ i ].resultado_multa  )
 					
@@ -1753,6 +1760,8 @@ module.exports = function() {
 					c.lista[ i ].selic_fim = c.info.selic_fim
 					let selicCalc = await this.pegasoma(c.lista[ i ].selic_ini, c.lista[ i ].selic_fim, idTab, false, false)
 
+					// console.log(': 1762 - selicCalc',selicCalc, c.lista[ i ].selic_ini, c.lista[ i ].selic_fim, idTab)
+
 					c.lista[ i ].resultado_selic_percentual = selicCalc.resultado
 					if (comMemoria) {
 						c.lista[ i ].resultado_selic_mesAmes = [] 
@@ -1779,6 +1788,12 @@ module.exports = function() {
 
 					c.lista[ i ].resultado_total += parseFloat( c.lista[ i ].resultado_selic)
 				}
+
+
+
+
+
+
 
 				// honorários
 				c.lista[ i ].resultado_honorarios_percentual = 0 
@@ -1940,7 +1955,7 @@ module.exports = function() {
 
 		c.info.totalzao = c.info.soma_final  + c.info.valor_honorarios_sucumbencia + c.info.valor_multa_ncpc + c.info.valor_honorarios_ncpc
 
-		if (c.info.calc_selic) {
+		if (c.info.calc_selic || c.info.indexador == 1005) {
 			c.info.dia_atualiza = temp_dia_atualiza
 		}
 
@@ -1952,15 +1967,15 @@ module.exports = function() {
 	this.le_tabelas = async function () {
 		diaCalculoGratuito = calcUtil.dia2yyyymmddInt( calcUtil.diminuiAno( calcUtil.diminuiAno( calcUtil.diaHoje() )))
 
-		var senha = process.env.MYSQL_password
-		if (process.env.MYSQL_host != "localhost") { senha = senha+"#"; }
+		var senha = process.env.MYSQL_password2
+		// if (process.env.MYSQL_host != "localhost") { senha = senha+"#"; }
 		var [res1] =  await this.con.query('select indice, maximo, nome, calculo, tabela, inicio, mesclavel, ativo_novo_atualiza from maximo where (ativo=1 or ativo_novo_atualiza=1)  order by nome') 
 
 		this.listaTabelas  = []
 		for (var i in res1) {
 			this.listaTabelas[ res1[i].indice ] = res1[i]
 		}
-
+		// console.table(this.listaTabelas)
 
 		for (var i in this.listaTabelas) {
 			var id = this.listaTabelas[i].indice

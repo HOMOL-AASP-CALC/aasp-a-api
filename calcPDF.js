@@ -11,6 +11,7 @@ const indexadorMesclavel = {
     105: 'Ufir',
     23: 'Selic (simples)',
     24: 'Selic (capitlzd)',
+    31: 'Selic + 1% (RFB)',
     107: 'IRSM',
     106: 'URV (mensal)',
     3: 'IGP-DI (FGV)',

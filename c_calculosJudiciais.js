@@ -1,3 +1,5 @@
+const calc = require('./calc.js');
+
 module.exports = function() {
     const calcUtil = require('./calcUtil.js');
     
@@ -13,6 +15,14 @@ module.exports = function() {
         // console.table(lista)
         for (let x in lista) {
             tabelaMaximo[ lista[x].indice ] = lista[x] 
+            if (lista[x].indice == 23) {
+                tabelaMaximo[ 31 ] = JSON.parse( JSON.stringify( lista[x] ) )
+                tabelaMaximo[ 31 ].indice = 31
+                tabelaMaximo[ 31 ].nome = 'SELIC + 1% (RFB)'
+                let d1 = calcUtil.yyyymmdd2dia( tabelaMaximo[ 31 ].maximo )
+                d1 = calcUtil.somaMes( d1 )
+                tabelaMaximo[ 31 ].maximo = parseInt( calcUtil.dia2yyyymmdd( d1 ) ) 
+            }
         }
         // console.log('tabelaMaximo', tabelaMaximo)
     }
@@ -191,8 +201,16 @@ module.exports = function() {
         }
 
         let dataMaxima = 0
-        if (t1.rt[ t1.rt.length-1 ].indexador >= 0) {
-            dataMaxima = calcUtil.yyyymmdd2dia( tabelaMaximo[ t1.rt[ t1.rt.length-1 ].indexador ].maximo )
+        let indexador1 = t1.rt[ t1.rt.length-1 ].indexador
+        if ( indexador1 >= 0) {
+            console.log('indexador, maximo', indexador1 ); // , tabelaMaximo[ indexador1].maximo )
+            if (typeof tabelaMaximo[ indexador1 ] === 'undefined') {
+                console.log('############################### c_calculosJudiciais linha 208 ---------------- não achei o indexador')
+                dataMaxima = '01/01/1980'
+            } else {
+                dataMaxima = calcUtil.yyyymmdd2dia( tabelaMaximo[ indexador1 ].maximo )
+            }
+            
         } else {
             dataMaxima = '01/' + calcUtil.mesAno2dia( j2[ j2.length-1 ].mesano )
         }

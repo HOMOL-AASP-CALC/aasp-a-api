@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const tabela = 'tjsp_precatorios'
 
-const mysql_senha = process.env.MYSQL_password
+const mysql_senha = process.env.MYSQL_password2
 
 const mysql = require('mysql2')  
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database }

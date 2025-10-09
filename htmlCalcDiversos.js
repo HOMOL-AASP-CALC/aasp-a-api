@@ -24,10 +24,10 @@ module.exports = {
             ]
         const mysql = require('mysql2') 
         con = mysql.createPool({
-            host: process.env.awsMYSQL_host, 	
-            user: process.env.awsMYSQL_user,	
-            password: process.env.awsMYSQL_password, 
-            database: 'calculos' })
+            host: process.env.MYSQL_host, 	
+            user: process.env.MYSQL_user,	
+            password: process.env.MYSQL_password2, 
+            database: process.env.MYSQL_database_calculos })
 
         const fraseHonoSucum  = function(form) {
             let r = ''

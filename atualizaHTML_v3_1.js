@@ -11,6 +11,7 @@ const indexadorMesclavel = {
     45: 'IPCA-E (IBGE)',
     105: 'Ufir',
     23: 'Selic (simples)',
+    31: 'Selic + 1% (RFB)',
     24: 'Selic (capitlzd)',
     107: 'IRSM',
     106: 'URV (mensal)',
@@ -235,7 +236,11 @@ module.exports = {
         var temp1 = [] 
         // ordenar os valores
 
-        if (typeof dump.info.calc_abater_valores==='undefined' || dump.info.calc_abater_valores) {
+        if (typeof dump.info.calc_abater_valores==='undefined') {
+            dump.info.calc_abater_valores = true
+        } 
+        
+        if (dump.info.calc_abater_valores) {
             for (var i in dump.lista) {
                 if (dump.lista[i].valor > 0 && !dump.lista[i].custas) {
                     temp1.push(dump.lista[i])
@@ -588,6 +593,7 @@ module.exports = {
                     }
 
                     // memoria 
+                    
                     if (dump.info.calc_modo_impressao == 'm') {
                         myDoc += `<tr><td colspan=4 style="text-align: center;" >`
                         myDoc += `<table  width='70%'  class="tabelaMesAMes">`
