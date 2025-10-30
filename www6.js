@@ -115,8 +115,8 @@ app.use(cookieParser());
 //----------------------------------------------------------------------------------------------------------------
 function cookie_uncrypt(cookie_criptografado) {
   //!IMPORTANTE: deixar igual ao php no verifica login
-  const key = process.env.cookie_key 
-  const interacoes = 481
+  const key = 'd2f7ea0c8f811d44854d068a6f55b3ba8db3c1d75f3a6d2c46f1a2e7d6d87e6f'
+  const interacoes = process.env.cookie_interacoes 
   const encryption = new Encryption()
   const cookie_descriptografado = encryption.decrypt(cookie_criptografado, key, interacoes)
   return JSON.parse(cookie_descriptografado);

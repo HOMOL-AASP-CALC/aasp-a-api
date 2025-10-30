@@ -175,7 +175,7 @@ function  agora() {
 
 function cookie_uncrypt(cookie_criptografado) {
 	const key = process.env.cookie_key  
-	const interacoes = 481
+	const interacoes = process.env.cookie_interacoes 
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()
 	const cookie_descriptografado = encryption.decrypt(cookie_criptografado, key, interacoes)

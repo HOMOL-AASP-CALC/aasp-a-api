@@ -27,18 +27,7 @@ const cors1 = {
 }
 
 var mysql_senha = process.env.MYSQL_password2 
-if (process.env.MYSQL_host == "localhost") {
-	cors1.origin = "http://app.fastbet.win"
-} 
-// else 
-// 	{
-// 	mysql_senha = mysql_senha+"#";
-// }
-
-const allowedDomains = ['https://debit-www6.pages.dev','http://fastbet.win', 'http://calcs.fastbet.win', 'https://calcs.debit.com.br',
-                        'http://app.fastbet.win', 'https://app.debit.com.br',
-						'http://www.fastbet.win', 'https://www.debit.com.br', 'https://debit.com.br',
-					];
+const allowedDomains =  process.env.allowedDomains
 
 // Middleware para configurar CORS com múltiplos domínios
 const corsOptionsDelegate = function (req, callback) {
@@ -67,10 +56,8 @@ var con = null
 var con2 = null 
 
 var app = express();
-// console.log(cors1)
-// app.use(cors(  cors1 ))
+
 app.use(cors(  corsOptionsDelegate ))
-// console.log( corsOptionsDelegate() )
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

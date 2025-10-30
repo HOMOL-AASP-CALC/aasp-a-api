@@ -66,12 +66,7 @@ calculadora.prevDifNRecebidas = new( require('./c_prevDifNRecebidas.js') );
 calculadora.prevCT = new( require('./c_prevCT.js') );
 calculadora.calculoTrabalhista = new( require('./c_calculoTrabalhista.js') );
 
-const allowedDomains = ['http://fastbet.win', 'https://www.debit.com.br', 'http://calcs.fastbet.win', 
-                        'https://calcs.debit.com.br','http://www.fastbet.win',
-                        'http://calculadoras.fastbet.win', 'https://calculadoras.debit.com.br',
-                        'http://calculadoras2.fastbet.win', 'https://calculadoras2.debit.com.br',
-                        'http://app.fastbet.win', 'https://app.debit.com.br', 'https://api.debit.com.br',
-                        'http://api.fastbet.win', 'http://atualiza.arquivosjuridicos.win', 'https://atualiza.arquivosjuridicos.com'  ];
+const allowedDomains = JSON.parse( process.env.allowedDomains )
 
 // Middleware para configurar CORS com múltiplos domínios
 const corsOptionsDelegate = function (req, callback) {
@@ -335,8 +330,7 @@ app.get('/calculosDiversos/pdf/:tipo/:id', async function(req, res) {
 
 	var logoInfo = 'sem_logo'
     try {
-        let url1 = urlLogoInfo+'?id='+c.v_id_dono
-        console.log(url1)
+        let url1 = urlLogoInfo+'/'+c.v_id_dono
 		var logoInfoTemp = await axios.get(url1)
 		logoInfo = logoInfoTemp.data
 	} catch	(err) {
@@ -376,7 +370,7 @@ app.get('/calculosDiversos/html/:tipo/:id', async function(req, res) {
 
 	var logoInfo = 'sem_logo'
     try {
-        let url1 = urlLogoInfo+'?id='+c.v_id_dono
+        let url1 = urlLogoInfo+'/'+c.v_id_dono
         console.log(url1)
 		var logoInfoTemp = await axios.get(url1)
 		logoInfo = logoInfoTemp.data
@@ -617,6 +611,49 @@ app.post('/calculosDiversos/tabelaDireta',  async function(req, res) {
     res.send( r )
 })
 
+app.get('/calculosDiversos/pdfT4/:idCalc',  async function(req, res) {
+    let idCalc = req.params.idCalc
+    let pasta = process.env.pasta_calculos + '/' + parseInt(idCalc / 10000)
+    let c = cookie_uncrypt( req.cookies['c_v_app'] )
+
+    try {
+        const [rows] = await con.promise().query('SELECT id_login FROM lista_calculo WHERE id = ? LIMIT 1',[idCalc]);
+
+        if (!rows || rows.length === 0) {
+            res.send({ sucesso: 0, msg: 'calculo_nao_encontrado' });
+            return;
+        }
+
+        // if (rows[0].id_login != c.v_id_dono) {
+        //     res.send({ sucesso: 0, msg: 'sem_permissao' });
+        //     return;
+        // }
+
+        try {
+            const nomeArquivo = `${pasta}/${idCalc}.pdf`;
+            if (!fs.existsSync(nomeArquivo)) {
+                res.status(404).send({ sucesso: 0, msg: 'arquivo_nao_encontrado' });
+                return;
+            }
+            const pdfBuffer = await fs.promises.readFile(nomeArquivo);
+            res.writeHead(200, {
+                'Content-Type': 'application/pdf',
+                'Content-Length': pdfBuffer.length
+            });
+            res.end(pdfBuffer);
+            return;
+        } catch (err) {
+            console.error('erro lendo pdf:', err);
+            res.status(500).send({ sucesso: 0, msg: 'erro_lendo_pdf' });
+            return;
+        }
+
+    } catch (err) {
+        console.error('erro consulta lista_calculo:', err);
+        res.send({ sucesso: 0, msg: 'erro_consulta' });
+        return;
+    }
+})
 
 app.post('/calculosDiversos/leParcial',  async function(req, res) {
     let idCalc = req.body.id
@@ -1189,7 +1226,7 @@ server.listen(porta_api, () => {
 
 function cookie_uncrypt(cookie_criptografado) {
 	const key = process.env.cookie_key  
-	const interacoes = 481 //!IMPORTANTE: deixar igual ao php no verifica login
+	const interacoes = process.env.cookie_interacoes  //!IMPORTANTE: deixar igual ao php no verifica login
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()
 	const cookie_descriptografado = encryption.decrypt(cookie_criptografado, key, interacoes)

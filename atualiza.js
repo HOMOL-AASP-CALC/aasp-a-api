@@ -18,8 +18,6 @@ if (process.argv.length > 2) {
 	porta_api = parseInt(nserver) + 3050 
 }
 
-
-// require('events').EventEmitter.prototype._maxListeners = 100;
 const fs = require('fs')
 const fs2 = require('fs').promises
 const calcUtil = require('./calcUtil.js');
@@ -30,9 +28,13 @@ var cors = require('cors')
 
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
-// var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-var cs1 = require('./calc.js')
+
+/********************************************** */
+// var cs1 = require('./calc-old.js')
+var cs1 = require('./calc-novo.js')
+
+
 var calcServer = new cs1() 
 
 require('dotenv').config()  
@@ -53,20 +55,14 @@ var socketList = []
 var mysql_senha = process.env.MYSQL_password2 
 var caminho = '/w'+porta_api;
 
-// if (process.env.MYSQL_host != "localhost") {
-// 	mysql_senha = mysql_senha+"#";
-// }
+
 const mysql = require('mysql2')  
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 
 var con2 = null 
 
-const allowedDomains = ['http://fastbet.win', 'https://www.debit.com.br', 'http://calcs.fastbet.win', 
-                        'https://calcs.debit.com.br','http://www.fastbet.win',"http://atualiza.fastbet.win",
-                        'http://calculadoras.fastbet.win', 'https://calculadoras.debit.com.br', "https://atualiza.debit.com.br",
-                        'http://calculadoras2.fastbet.win', 'https://calculadoras2.debit.com.br',
-                        'http://app.fastbet.win', 'https://app.debit.com.br', 'https://api.debit.com.br',
-                        'http://api.fastbet.win', 'http://atualiza.arquivosjuridicos.win', 'https://atualiza.arquivosjuridicos.com'  ];
+const allowedDomains = JSON.parse( process.env.allowedDomains )
+
 
 // Middleware para configurar CORS com múltiplos domínios
 const corsOptionsDelegate = function (req, callback) {
@@ -74,6 +70,7 @@ const corsOptionsDelegate = function (req, callback) {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true
   }
+
 
   if (allowedDomains.indexOf(req.header('Origin')) !== -1) {
     // console.log('entrou')
@@ -451,7 +448,11 @@ app.get('/atualiza/ping',  function(req, res) {
 
 app.get('/s'+porta_api.toString()+'/pdf/:id', async function(req, res) {
 	var id = req.params.id
-	var c = cookie_uncrypt( req.cookies['c_v_app'] , req.headers ) 
+	let c1 = req.cookies['c_v_app'] 
+	if (!c1) {
+		c1 = req.cookies['access_token']
+	}
+	var c = cookie_uncrypt(c1 , req.headers ) 
 
 	if (typeof calc[ id ] === 'undefined' || calc[id] == null ) {
 		le_arquivo( id, function (res2) {
@@ -477,7 +478,7 @@ app.get('/s'+porta_api.toString()+'/pdf/:id', async function(req, res) {
 	var id = req.params.id
 
 	try {
-		var logoInfoTemp = await axios.get(urlLogoInfo+'?id='+c.v_id_dono)
+		var logoInfoTemp = await axios.get(urlLogoInfo+'/'+c.v_id_dono)
 		var logoInfo = logoInfoTemp.data
 
 	} catch	(err) {
@@ -503,7 +504,10 @@ app.get('/s'+porta_api.toString()+'/pdf/:id', async function(req, res) {
 		.end(pdfData);
 	});
 
-	calcPDF.montaCalc( myDoc, await efetuar_calculo( calc[ id ], p1, true, -1, c.v_assinante_atualiza)  ) 
+	let mesAmes = (calc[ id ].info.calc_modo_impressao == 'm')
+	// let mesAmes = true
+
+	calcPDF.montaCalc( myDoc, await efetuar_calculo( calc[ id ], p1, mesAmes, -1, c.v_assinante_atualiza)  ) 
 });
 
 app.get('/s'+porta_api.toString()+'/xxxxxduplicar/:id', async function(req, res) {
@@ -588,15 +592,21 @@ app.get('/s'+porta_api.toString()+'/xxxxxduplicar/:id', async function(req, res)
 	res.send({success:1})
 });
 
-app.get('/s'+porta_api.toString()+'/dump/:idCalc', async function(req, res) {
-	var idCalc = req.params.idCalc
-	res.send(calc[ idCalc ])
-})
+// app.get('/s'+porta_api.toString()+'/dump/:idCalc', async function(req, res) {
+// 	var idCalc = req.params.idCalc
+// 	res.send(calc[ idCalc ])
+// })
 
 app.get('/s'+porta_api.toString()+'/html/:id', async function(req, res) {
 	var id = req.params.id
 	console.log('/s'+porta_api.toString()+'/html/'+id)
-	var c = cookie_uncrypt( req.cookies['c_v_app'] , req.headers ) 
+
+	let c1 = req.cookies['c_v_app'] 
+	if (!c1) {
+		c1 = req.cookies['access_token']
+	}
+
+	var c = cookie_uncrypt( c1 , req.headers ) 
 
 	var permissao1 = await permissoes_ativas( id, c )
 	if (permissao1.length > 0 && permissao1[0].novoId) {
@@ -605,13 +615,16 @@ app.get('/s'+porta_api.toString()+'/html/:id', async function(req, res) {
 	}
 	var p1 = permissao1.find( x => x.id == c.v_id_dono )
 
-	if (typeof p1 === 'undefined' || p1 == null) {
-		console.log('sem permissão para acessao o cálculo')
-		res.send( {sucess:0,erro: 'sem permissão para acessao o cálculo'} )
-		return;
-	}
+	// if (typeof p1 === 'undefined' || p1 == null) {
+	// 	console.log('sem permissão para acessao o cálculo')
+	// 	res.send( {sucess:0,erro: 'sem permissão para acessao o cálculo'} )
+	// 	return;
+	// }
 
-	res.send( calcHTML.montaCalc( await efetuar_calculo(calc[ id ], p1, true, -1, c.v_assinante_atualiza) ))
+	let mesAmes = (calc[ id ].info.calc_modo_impressao == 'm')
+	// let mesAmes = true
+	let calc1= await efetuar_calculo(calc[ id ], p1, mesAmes, -1, c.v_assinante_atualiza) 
+	res.send( calcHTML.montaCalc( calc1 ))
 });
 
 function getCookieFromSocket( handshake ) {
@@ -997,8 +1010,6 @@ function  agora_yyyymmdd() {
 			 formataN(currentdate.getSeconds());
 }
 
-// console.log('agora_yyyymmdd', agora_yyyymmdd() )
-
 
 le_arquivo = function ( idCalc, callback ) {
     var n = parseInt(idCalc / 1500)
@@ -1092,7 +1103,7 @@ salvarCalc = function ( idCalc ) {
 
 function cookie_uncrypt(cookie_criptografado, headers) {
 	const key = process.env.cookie_key   //!IMPORTANTE: deixar igual ao php no verifica login
-	const interacoes = 481 //!IMPORTANTE: deixar igual ao php no verifica login
+	const interacoes = process.env.cookie_interacoes //!IMPORTANTE: deixar igual ao php no verifica login
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()
 	const cookie_descriptografado = encryption.decrypt(cookie_criptografado, key, interacoes)

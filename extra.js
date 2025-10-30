@@ -8,14 +8,14 @@ if (process.argv.length > 2) {
 
 
 const fs = require('fs')
-const fs2 = require('fs').promises
+// const fs2 = require('fs').promises
 const calcUtil = require('./calcUtil.js');
 
 var http = require('http');
 var express = require('express');
 var cors = require('cors')
 
-var bodyParser = require('body-parser')
+// var bodyParser = require('body-parser')
 // var jsonParser = bodyParser.json()
 // var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
@@ -26,35 +26,41 @@ var qs = require('querystring')
 var cookieParser = require('cookie-parser');
 var pasta_env = process.env.pasta_calculos
 
-const cors1 = {
-    origin: "https://atualiza.debit.com.br",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true
-}
-
 var mysql_senha = process.env.MYSQL_password2 
-
-if (process.env.MYSQL_host == "localhost") {
-	cors1.origin = "http://app.fastbet.win"
-} 
-// else {
-// 	mysql_senha = mysql_senha+"#";
-// // 	var caminho = '/atualizaSocket/' 
-// }
 const mysql = require('mysql2')  
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database }
 
+
+var mysql_senha = process.env.MYSQL_password2 
+const allowedDomains = JSON.parse( process.env.allowedDomains )
+
+// Middleware para configurar CORS com múltiplos domínios
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions= {
+    methods: 'GET,POST',
+    credentials: true
+  }
+  
+  if (allowedDomains.indexOf(req.header('Origin')) !== -1) {
+    corsOptions.origin =true; // Permitir domínio na lista
+  } else {
+    corsOptions.origin= false ; // Bloquear domínios não permitidos
+  }
+  callback(null, corsOptions);
+};
+
+
+
 var con = null 
-var con2 = null 
 
 var app = express();
-app.use(cors(  cors1 ))
+app.use(cors(  corsOptionsDelegate ))
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const server = http.createServer(app);
-var axios = require('axios');
+
 
 
 var handleDisconnect = function() {
@@ -72,20 +78,7 @@ var handleDisconnect = function() {
 
 handleDisconnect();
 
-var handleDisconnect2 = function() {
-	con2 =   mysql.createPool(mysql_info)
 
-	con2.on('error', function(err) {
-		console.log('---- mysql desconectou no atualiza.js - linha 105 ---- ', err);
-		if(err.code === 'PROTOCOL_CONNECTION_LOST - 2 ') { 
-			handleDisconnect2(); 
-		} else { 
-			throw err; 
-		}
-	});
-}
-
-handleDisconnect2();
 
 const mysqlDisconnect = function(m_info) {
     var m1 = mysql.createPool(m_info)
@@ -144,7 +137,7 @@ app.get('/atualizaExtra/ping',  function(req, res) {
 
 app.get('/atualizaExtra/copiar/:id', async function(req, res) {
 	var id = req.params.id
-	var c = cookie_uncrypt( req.cookies['c_v_app'] ) 
+	var c = cookie_uncrypt( req.cookies['c_v_app'] , req.headers ) 
 
 	var permissao1 = await permissoes_ativas( id, c )
     console.log('copiando cálculo '+id)
@@ -155,7 +148,7 @@ app.get('/atualizaExtra/copiar/:id', async function(req, res) {
 	var p1 = permissao1.find( x => x.id == c.v_id_dono )
 
 	if (typeof p1 === 'undefined' || p1 == null) {
-		// console.log('sem permissão para acessao o cálculo')
+		console.log('sem permissão para acessao o cálculo')
 		res.send( {sucess:0,erro: 'sem permissão para acessao o cálculo'} )
 		return;
 	}
@@ -189,16 +182,18 @@ app.get('/atualizaExtra/copiar/:id', async function(req, res) {
 					fs.readFile(nomearq_origem, 'utf8', (err, dados) => {
 						if (err) {
 						  console.log('erro ao ler o arquivo para copia-lo: '+id)
-						//   console.error(err);
+						  console.error(err);
 						//   res.send('{success:0}')
 						  return;
 						}
 						var json_dados = calcUtil.JSON_parseAutoCorrige(dados) 
 						if (typeof json_dados === 'undefined') {
+							console.log('erro l: 205	')
 							// res.send('{success:0}')
 							return;						
 						}
 						if (typeof json_dados.info === 'undefined') {
+							console.log('erro l: 210	')
 							// res.send('{success:0}')
 							return;						
 						}
@@ -228,15 +223,6 @@ function formataN(n) {
 	return  (x<10) ? '0'+x.toString() : x.toString()
 }
 
-function  agora() {
-	var currentdate = new Date(); 
-	return  formataN(currentdate.getDate()) + "/"
-					+ (formataN(currentdate.getMonth()+1))  + "/" 
-					+ formataN(currentdate.getFullYear()) + " "  
-					+ formataN(currentdate.getHours()) + ":"  
-					+ formataN(currentdate.getMinutes()) + ":" 
-					+ formataN(currentdate.getSeconds());
-}
 
 function  agora_yyyymmdd() {
 	var currentdate = new Date(); 
@@ -259,13 +245,29 @@ function formataN(n) {
 	return  (x<10) ? '0'+x.toString() : x.toString()
 }
 
-function cookie_uncrypt(cookie_criptografado) {
-
-	const key = 'd2f7ea0c8f811d44854d068a6f55b3ba8db3c1d75f3a6d2c46f1a2e7d6d87e6f' //!IMPORTANTE: deixar igual ao php no verifica login
-	const interacoes = 481 //!IMPORTANTE: deixar igual ao php no verifica login
+function cookie_uncrypt(cookie_criptografado, headers) {
+	const key = process.env.cookie_key   //!IMPORTANTE: deixar igual ao php no verifica login
+	const interacoes = process.env.cookie_interacoes //!IMPORTANTE: deixar igual ao php no verifica login
 	const Encryption = require('./Encryption.js')
 	const encryption = new Encryption()
 	const cookie_descriptografado = encryption.decrypt(cookie_criptografado, key, interacoes)
 	cookie = JSON.parse(cookie_descriptografado)
+
+	if (typeof cookie.v_id_dono === 'undefined') {
+		if (!headers.whitelabeltoken) {
+			headers.whitelabeltoken = headers.authorization.substring(7)
+		}
+
+		if (headers && headers.whitelabeltoken) {
+			try {
+				let c2 = encryption.decrypt(headers.whitelabeltoken, key, interacoes)
+				return JSON.parse(c2)
+
+			} catch (e) {
+				return null
+			}
+        } 
+	}
+
 	return cookie;
 }

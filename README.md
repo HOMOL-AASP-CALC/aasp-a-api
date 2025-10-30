@@ -21,9 +21,7 @@ MYSQL_user=usuario
 MYSQL_password=senha
 MYSQL_password2=senha2
 MYSQL_database=debit
-awsMYSQL_host=aws-host
-awsMYSQL_user=aws-user
-awsMYSQL_password=aws-senha
+
 pasta_calculos=/caminho/para/calculos
 pasta_log=/caminho/para/logs
 servidorAPI=https://api.debit.com.br
