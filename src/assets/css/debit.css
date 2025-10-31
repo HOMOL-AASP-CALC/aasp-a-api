@@ -1,0 +1,1848 @@
+.topo_opc1 {
+	font-weight: bold;
+}
+
+.mdl-layout__drawer-button {
+	height: 30px !important;
+}
+
+.mdl-layout.is-upgraded .mdl-layout__tab.is-active::after {
+	background-color: #01579b;
+}
+
+.cor_aasp {
+	background-color: #DA0019 !important;
+}
+
+.link1 {
+	text-decoration: none;
+	color: #333;
+}
+
+.link2 {
+	text-decoration: none;
+}
+
+
+.link3 {
+	text-decoration: none;
+	color: #005881;
+	font-weight: 400;
+}
+
+
+.submenu_lateral {
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.lista_calculo_busca {
+	font-size: 18px;
+	width: 250px;
+	height: 30px;
+}
+
+.lista_calculo_table {
+
+}
+
+.lista_calculo_table a {
+	color: #666;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.lista_calculo_table tr{
+	background-color: #FFF !important;
+}
+
+.btn_outros {
+	background-color:#DDD;
+	color: #333;
+}
+
+.btn_outros:hover {
+	background-color: 	#2F75AD;
+	color: #FFF;
+}
+
+.btn_apagado {
+	background-color:#FAFAFA;
+	color: #333;
+	border:none;
+}
+
+.btn_apagado:hover {
+	background-color: 	#2F75AD;
+	color: #FFF;
+}
+
+
+
+.btn_cancela_busca {
+	background-color:#DDD;
+	color: #333;
+}
+
+
+.btn_add_calc {
+	background-color: #66BB6A;
+	color: #FFF;
+}
+
+
+.btn_add_calc:hover {
+	background-color: 	#66BB6A;
+}
+
+
+
+.btn_del_calc {
+	background-color: #DDD;
+	color: red;
+}
+
+.btn_del_calc:hover {
+	/* background-color: 	#2F75AD; */
+	background-color: #f44336;
+	color: #FFF;
+}
+
+.btn_paginacao {
+	background-color: #DDD;
+	color: #01579b;
+	min-width: 40px !important;
+}
+
+.btn_paginacao:hover {
+	/* background-color: 	#2F75AD; */
+	background-color: #01579b;
+	color: #FFF;
+	min-width: 40px !important;
+}
+
+.btn_paginacao_sel {
+	background-color: #FFF;
+	color: #01579b;
+	border: 1px solid #01579b;
+	min-width: 40px !important;
+}
+
+
+.cor_avancar {
+	background-color: #66BB6A;
+	color: #FFF;
+}
+
+.cor_atencao {
+	background-color: red;
+	color: #FFF;
+}
+
+.cor_normal {
+	color: #FFF;
+	background-color:#01579b;
+}
+
+.btn_1 {
+
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: -50px;
+	margin-bottom: 40px;
+	z-index: 900;
+	animation-name: btn_a;
+	animation-duration: 0.5s;
+	animation-delay: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.btn_1:hover {
+	background-color: 	#2F75AD;
+}
+
+.btn_2 {
+	color: #FFF;
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: -50px;
+	margin-bottom: 40px;
+	z-index: 900;
+	animation-name: btn_b;
+	animation-duration: 0.5s;
+	animation-delay: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.btn_2:hover {
+	background-color: 	#2F75AD;
+}
+
+.btn_3 {
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: -50px;
+	margin-bottom: 40px;
+	z-index: 900;
+	animation-name: btn_c;
+	animation-duration: 0.5s;
+	animation-delay: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.btn_3:hover {
+	background-color: 	#2F75AD;
+}
+
+.btn_4 {
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: -50px;
+	margin-bottom: 40px;
+	z-index: 900;
+	animation-name: btn_d;
+	animation-duration: 0.5s;
+	animation-delay: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.btn_4:hover {
+	background-color: 	#2F75AD;
+}
+
+.btn_5 {
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: -50px;
+	margin-bottom: 40px;
+	z-index: 900;
+	animation-name: btn_e;
+	animation-duration: 0.5s;
+	animation-delay: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.btn_5:hover {
+	background-color: 	#2F75AD;
+}
+
+.btn_6 {
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: -50px;
+	margin-bottom: 40px;
+	z-index: 900;
+	animation-name: btn_f;
+	animation-duration: 0.5s;
+	animation-delay: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.btn_6:hover {
+	background-color: 	#2F75AD;
+}
+
+.btn_7 {
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: -50px;
+	margin-bottom: 40px;
+	z-index: 900;
+
+	animation-name: btn_g;
+	animation-duration: 0.5s;
+	animation-delay: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.btn_7:hover {
+	background-color: 	#2F75AD;
+}
+
+/* botao salvar animado */
+
+.btn_salvar_anim {
+	animation-name: btn_msg_a;
+	animation-duration: 0.2s;
+	animation-delay: 0s;
+}
+
+.btn_salvar_anim2 {
+	animation-name: btn_msg_b;
+	animation-duration: 0.2s;
+	animation-delay: 0s;
+}
+
+
+@keyframes btn_msg_a {
+	0% {margin-right: 40px; color: #01579b; font-size: 16px;}
+	100% {
+		margin-right: 40px;
+		width: 180px;
+		color: #fff;
+		background-color: #01579b;
+		border-radius: 30px;
+		font-size: 16px;
+		line-height: 36px;
+	}
+}
+
+@keyframes btn_msg_b {
+	0% {
+		margin-right: 40px;
+		width: 180px;
+		color: #fff;
+		background-color: #01579b;
+		border-radius: 30px;
+	}
+	100% {
+		margin-right: 40px;
+		border-radius: 50%;
+		width: 40px;
+		background-color: #01579b;
+		font-size: 24px;
+	}
+
+}
+
+/* botao salvar animado  - fim */
+
+@keyframes btn_a {
+	0% {margin-right: 0px;opacity:0;}
+	100% {margin-right: 40px;opacity:1;}
+}
+
+@keyframes btn_b {
+	0% {margin-right: 0px; opacity:0;}
+	100% {margin-right: 90px;opacity:1;}
+}
+
+@keyframes btn_c {
+	0% {margin-right: 0px ; opacity:0;}
+	100% {margin-right: 140px; opacity:1;}
+}
+@keyframes btn_d {
+	0% {margin-right: 0px; opacity:0;}
+	100% {margin-right: 190px; opacity:1;}
+}
+@keyframes btn_e {
+	0% {margin-right: 0px; opacity:0;}
+	100% {margin-right: 240px; opacity:1;}
+}
+@keyframes btn_f {
+	0% {margin-right: 0px; opacity:0;}
+	100% {margin-right: 290px; opacity:1;}
+}
+@keyframes btn_g {
+	0% {margin-right: 0px; opacity:0;}
+	100% {margin-right: 340px; opacity:1;}
+}
+
+
+.btn_busca {
+	background-color: orange !important;
+	/*
+          position: fixed;
+          display: block;
+          right: 0;
+          bottom: 0;
+          margin-right: -50px;
+          margin-bottom: 40px;
+        animation-name: btn_a;
+        animation-duration: 0.5s;
+    /*	animation-delay: 0.5s;
+        animation-fill-mode: forwards; */
+}
+
+.form_input1 {
+	float:inherit ;
+	width: 550px;
+}
+
+.form_input2 {
+	float:inherit ;
+	width: 550px !important;
+	text-align: left !important;
+}
+
+
+.background_card {
+	background-color: #FAFAFA;
+}
+
+.icones_indicadores {
+	color: #999 !important;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+.icones_calculos {
+	color: #999 !important;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+
+.grafico_indicadores {
+	margin-top: 10px;
+	background-color: #FAFAFA;
+	/*border: 1px #DDD solid; */
+	padding-top: 20px;
+	padding-bottom: 0px;
+	padding-right: 0px;
+	padding-left: 0px;
+	height: 90px;
+	margin-bottom: 0px;
+}
+
+.align_left {
+	text-align: left !important;
+}
+
+.cinza {
+	color: #999  !important;
+}
+
+.calc_textfield {
+	width: 120px;
+	padding: 0px;
+}
+
+.calc_textfield_input {
+	font-size: 13px !important;
+}
+
+.calc_td {
+	border: 1px solid #EEE;
+	padding: 8px !important;
+	width: 1px !important;
+	font-size: 11px;
+}
+
+.cp_label {
+	color: #222;
+	text-align: left !important;
+	font-weight: normal;
+	font-size: 16px;
+	padding-bottom: 10px !important;
+
+}
+
+.btn_form {
+	background-color: #EEE !important;
+	border: 1px #DDD solid !important;
+}
+
+.dialog_font {
+	font-family: "Roboto","Helvetica","Arial",sans-serif;
+}
+
+.calc_nao_somar {
+	color:#CCC;
+	text-decoration: line-through;
+}
+
+
+.card_background {
+	background-color: #FAFAFA;
+}
+
+/* Tabelas dos modais */
+
+
+.modal_table {
+	font-size: 14px;
+	width: 100%;
+	border-collapse: collapse;
+	font-family: "Roboto","Helvetica","Arial","sans-serif";
+
+}
+
+.modal_table td {
+	color: #333;
+	height: 30px;
+	padding: 6px;
+	/* line-height: 20px;	*/
+}
+
+
+.modal_table input {
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+.modal_table textarea {
+	border: 1px #DDD solid;
+	border-radius: 5px;
+	text-align: left;
+}
+
+.modal_table select {
+	height: 24px;
+}
+
+/* Tabela do cálculo trabalhista */
+
+.mdl_plan1 {
+	font-size: 12px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.mdl_plan1 td {
+	color: #333;
+	text-align: right;
+	border: 1px #DDD solid;
+	height: 30px;
+	padding: 6px;
+}
+
+.mdl_plan1 th {
+	color: #555;
+	text-align: right;
+	border: 1px #DDD solid;
+	background-image: linear-gradient(#FFF, #EEE);
+	padding: 5px;
+	height: 30px;
+}
+
+.mdl_plan1 input {
+	width:130px;
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+.mdl_plan1 select {
+	background-color: #FFF;
+	border: 1px #DDD solid;
+	height: 27px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+
+.mdl_plan1 textarea {
+	border: 1px #DDD solid;
+	border-radius: 5px;
+	text-align: left;
+}
+
+.mdl_plan1 a {
+	text-decoration: none;
+}
+
+/***************************************************/
+
+
+/* Tabela do cálculo atualização monetária */
+
+.mdl_plan_atualiza {
+	font-size: 16px;
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px #DDD solid;
+}
+
+.mdl_plan_atualiza td {
+	color: #333;
+	text-align: right;
+	border-right:  1px #DDD solid;
+	border-left:  1px #DDD solid;
+	height: 40px;
+	padding: 6px;
+	line-height: 30px;
+	vertical-align: top;
+}
+
+
+
+.mdl_plan_atualiza tr:nth-child(4n+0) {
+	background-color: #f2f2f2;
+}
+.mdl_plan_atualiza tr:nth-child(4n+1) {
+	background-color: #f2f2f2;
+}
+
+.mdl_plan_atualiza tr:nth-child(4n+2) {
+	background-color: #fff
+}
+.mdl_plan_atualiza tr:nth-child(4n+3) {
+	background-color: #fff;
+}
+
+
+
+
+.mdl_plan_atualiza th {
+	vertical-align: top;
+	color: #555;
+	text-align: right;
+	border: 1px #DDD solid;
+	/*background-image: linear-gradient(#FFF, #EEE);*/
+	padding: 5px;
+	height: 30px;
+}
+
+.mdl_plan_atualiza input {
+	color: #333;
+	border: 1px #eee solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: right;
+	font-size: 16px;
+	height: 30px;
+}
+
+.mdl_plan_atualiza select {
+	background-color: #FFF;
+	border: 1px #DDD solid;
+	height: 36px;
+	border-radius: 5px;
+	text-align: right;
+	font-size: 16px;
+}
+
+
+.mdl_plan_atualiza textarea {
+	border: 1px #DDD solid;
+	border-radius: 5px;
+	text-align: left;
+}
+
+.mdl_plan_atualiza a {
+	text-decoration: none;
+}
+
+.mdl_plan_atualiza_data {
+	width: 140px;
+}
+
+.mdl_plan_atualiza_valor {
+	width: 150px;
+}
+
+
+
+/***************************************************/
+
+/* Tabelas dos modais */
+
+
+.modal_table {
+	font-size: 14px;
+	width: 100%;
+	border-collapse: collapse;
+	font-family: "Roboto","Helvetica","Arial","sans-serif";
+
+}
+
+.modal_table td {
+	color: #333;
+	height: 30px;
+	padding: 6px;
+	/* line-height: 20px;	*/
+}
+
+
+.modal_table input {
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+.modal_table select {
+	height: 24px;
+}
+
+/* Tabela do cálculo trabalhista */
+
+.mdl_plan0 {
+	font-size: 12px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.mdl_plan0 td {
+	color: #333;
+	text-align: right;
+	border: 1px #DDD solid;
+	height: 30px;
+	padding: 6px;
+}
+
+.mdl_plan0 th {
+	color: #555;
+	text-align: right;
+	border: 1px #DDD solid;
+	background-image: linear-gradient(#FFF, #EEE);
+	padding: 5px;
+	height: 30px;
+}
+
+
+
+.mdl_plan0 a {
+	text-decoration: none;
+}
+
+
+.mdl_plan0 input {
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: left;
+}
+
+/****************************************************************************/
+
+/** dialogos **/
+
+
+/* Tabela do cálculo trabalhista */
+
+.mdl_dialogos1 {
+	font-size: 14px;
+	width: 100%;
+	border-collapse: collapse;
+	background-color: #FFF;
+	border-color: #FFF;
+}
+
+.mdl_dialogos1 td {
+	color: #333;
+	text-align: right;
+	border: 0;
+	height: 30px;
+	padding: 6px;
+	vertical-align: top;
+}
+
+.mdl_dialogos1 th {
+	color: #555;
+	text-align: right;
+	border: 1px #DDD solid;
+	background-image: linear-gradient(#FFF, #EEE);
+	padding: 5px;
+	height: 30px;
+}
+
+.mdl_dialogos1 input {
+	width:130px;
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+.mdl_dialogos1 select {
+	background-color: #FFF;
+	border: 1px #DDD solid;
+	height: 27px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+
+.mdl_dialogos1 textarea {
+	border: 1px #DDD solid;
+	border-radius: 5px;
+	text-align: left;
+}
+
+.mdl_dialogos1 a {
+	text-decoration: none;
+}
+
+.dialogos1_btn_avancar {
+	color: green;
+	background-color: #EEE;
+}
+
+.dialogos1_btn_normal {
+	color: #444;
+	background-color: #EEE;
+}
+
+.dialogos1_titulo {
+	padding-bottom: 10px;
+}
+
+.dialogos1_titulo_texto {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	color: #000;
+}
+
+.dialogos_principal {
+	border: 1px #CCC solid;
+	margin-left: 10px;
+	margin-right: 10px;
+	width: auto;
+	background-color: #FFF;
+}
+
+
+/************************************************************************/
+
+/* Tabela de indicadores */
+
+.mdl_plan_indicadores {
+	font-size: 12px;
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px #DDD solid;
+	background-color: #FFF;
+}
+
+.mdl_plan_indicadores td {
+	color: #333;
+	text-align: right;
+
+	height: 24px;
+	padding: 6px;
+}
+
+.mdl_plan_indicadores th {
+	color: #555;
+	text-align: right;
+	background-image: linear-gradient(#FFF, #EEE);
+	padding: 5px;
+	height: 30px;
+}
+
+.mdl_plan_indicadores tr:hover {
+	color: #555;
+	text-align: right;
+	background-color: #EEE;
+	padding: 5px;
+	height: 24px;
+}
+
+.mdl_plan_indicadores input {
+	width:130px;
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+.mdl_plan_indicadores a {
+	text-decoration: none;
+	color: #222;
+}
+
+.mdl_plan_indicadores h2 {
+	font-size: 14px;
+	color: #666;
+	margin: 0px;
+	line-height: 24px;
+}
+
+/**********************************************************************************************/
+
+
+.checkbox_menor {
+	width: 20px !important;
+}
+
+
+.rel_titulo1 {
+	font-size: 24px;
+	text-align: left;
+	color: #000;
+	margin-top: 0px ;
+	margin-bottom: 7px ;
+}
+
+.erro_linha1 {
+	right:-5px !important;
+	float: none !important;
+	clear:none !important;
+	margin-top: 0px !important;
+	border-collapse: initial !important;
+}
+.balaozinho{
+	position: absolute;
+	left: 145px;
+	border-collapse: initial !important;
+	color: #CC0000 !important;
+	background-color: #FFEBE8;
+	display: none !important;
+	border: 1px dashed #CC0000 !important;
+	font-weight: normal !important;
+	border-radius: 4px;
+	padding: 8px 16px !important;
+	min-height: 34px;
+	border-color: #cc0000 !important;
+}
+
+.validacao_modal {
+	right:0px !important;
+	position:inherit !important;
+}
+
+.input_erro {
+	border-color: red !important;
+}
+
+.erro_label {
+	margin-top: 7px;
+	color: #333;
+	border: 1px solid #ff9999;
+	padding: 5px;
+	background-color: #ffe6e6;
+	border-radius: 5px;
+	font-size: 12px;
+	display: none;
+}
+
+.input_hora {
+	width: 45px !important;
+}
+
+.input_dia {
+	width: 65px !important;
+}
+
+/** tabelas do cartao de ponto */
+
+.mdl_plan_cartao {
+	font-size: 12px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.mdl_plan_cartao td {
+	text-align: right;
+	border: 1px #DDD solid;
+	height: 30px;
+	padding: 6px;
+}
+
+.mdl_plan_cartao th {
+	color: #555;
+	text-align: right;
+	border: 1px #DDD solid;
+	background-image: linear-gradient(#FFF, #EEE);
+	padding: 5px;
+	height: 30px;
+}
+
+.mdl_plan_cartao input {
+	width:45px;
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+.mdl_plan_cartao select {
+	background-color: #FFF;
+	border: 1px #DDD solid;
+	height: 27px;
+	border-radius: 5px;
+	text-align: right;
+}
+
+.mdl_cartao_trabalho {
+	background-color: #FFF;
+	color: #333;
+}
+
+.mdl_cartao_descanso {
+	background-color: #FAFAFA ;
+	color: #E79A19 !important;
+	font-weight: bold;
+}
+
+.mdl_cartao_falta {
+	background-color: #EEE;
+	color: #333;
+}
+
+.mdl_cartao_falta_justificada {
+	background-color: #CCEBFF;
+	color: #333;
+}
+
+.fonte_h1 {
+	font-size: 24px;
+}
+
+.fonte_h2 {
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.carrinho_titulo  {
+	text-align: center;
+	display: block;
+	height: 70px;
+	background-color: #eee;
+}
+
+.carrinho_titulo  h4 {
+	margin-top: 1px;
+
+}
+
+.carrinho_preco  {
+	text-align: center;
+	display: block;
+	height: 70px;
+	background-color: #EEE;
+	vertical-align: middle;
+	margin-top: 1px;
+}
+
+.carrinho_preco  h4 {
+	margin-top: 1px;
+	margin-top: 1px;
+}
+
+
+.carrinho_preco2  {
+	text-align: center;
+	display: block;
+	height: 30px;
+	background-color: #fff;
+	vertical-align: middle;
+	margin-top: 1px;
+	padding-top: 0px;
+	padding-bottom: 40px;
+	border-bottom: 1px #ddd solid;
+
+}
+
+.carrinho_preco2  h4 {
+	margin-top: 1px;
+	margin-top: 1px;
+}
+
+
+.carrinho_btn {
+	text-align: center;
+	display: block;
+}
+
+.input_cobranca {
+	width: 94%;
+	text-align: left !important;
+}
+
+.input_avulso {
+	border: 1px #DDD solid;
+	height: 20px;
+	border-radius: 5px;
+}
+
+.index_trabalhista_sessao1 {
+	margin: 0px;
+	margin-right: -20px;
+	background-size: 100% 520px;
+	height: 520px;
+}
+
+.index_trab_titulo1 {
+	color: #FFF;
+	text-align: center;
+	font-size: 55px;
+	font-family: sans-serif;
+}
+
+.index_trab_titulo2 {
+	color: #FFBA00;
+	text-align: center;
+	font-size: 20px;
+	xfont-family: "sans-serif";
+}
+
+.index_trab_titulo3 {
+	color: #FFF;
+	text-align: center;
+	font-size: 25px;
+	font-family: sans-serif;
+}
+
+.index_trab_titulo4 {
+	color: #FFF;
+	text-align: center;
+	font-size: 16px;
+	font-family: sans-serif;
+}
+
+
+.index_trabalhista_sessao2 {
+	margin: 0px;
+	margin-right: -20px;
+	background-size: 100% auto;
+	background-color: #fff;
+	text-align: center;
+	color: #444;
+	font-size: 12px;
+	min-height: 550px;
+}
+
+.index_trabalhista_sessao3 {
+	margin: 0px;
+	margin-right: -20px;
+	background-size: 100% auto;
+	xheight: 520px;
+}
+
+.index_trabalhista_sessao4 {
+	margin: 0px;
+	margin-right: -20px;
+	background-size: 100% auto;
+	background-color: #A9D0F5;
+	text-align: center;
+	color: #444;
+	font-size: 16px;
+	min-height: 550px;
+}
+
+.index_trabalhista_sessao5 {
+	margin: 0px;
+	margin-right: -20px;
+	background-size: 100% auto;
+	background-color: #FFF;
+	text-align: center;
+	color: #444;
+	font-size: 16px;
+	min-height: 550px;
+}
+
+.boxWhite {
+	width:817px;
+	height:229px;
+	margin:35px auto 0;
+}
+
+.boxWhite ul {float:left; padding: 15px 24px;}
+.boxWhite ul li {clear:both; list-style-type: none;}
+.boxWhite ul li img {display:inline; margin-right:6px;}
+.boxWhite ul li p {display:inline; padding:0; margin:0;width: 180px;}
+
+/* css da index do cartao de pondo */
+
+
+/* Header Wrap */
+
+.index_cartao {
+	width: calc( 100% - 35px);
+
+
+	background-color: #999;
+	padding-top: 0px;
+
+}
+
+.index_cartao h1 {
+	margin-top: 60px;
+	color: white;
+	font-size: 50px;
+	background-color: #E84C3D;
+	padding-left: 50px;
+	margin-bottom: 0px;
+}
+
+
+.index_cartao ul {
+	padding-left: 0px;
+}
+.index_cartao ul li {
+	width:100%;
+	list-style-type: none;
+	background-color:#FFF;
+	margin-top: 5px;
+	margin-bottom: 0px;
+	padding-left: 0px;
+	font-size: 18px;
+	color: #666;
+}
+
+.index_cartao ul li span {
+	padding-left: 15px;
+
+}
+
+
+.background_gomo1_index_financiamento {
+	background-color: orange;
+}
+
+.background_gomo1_index_financiamento p {
+	color: #FFF;
+	font-size: 18px;
+}
+
+.index_finaciamento_titulo2 {
+	font-size: 27px;
+	font-weight: 500;
+	color: #FFF;
+	word-wrap: break-word;
+	text-align: center;
+}
+
+
+.index_trab-2 {
+	background-color: #fff;
+}
+
+.index_trab h1 {
+	color: #222;
+	font-size: 24px;
+}
+
+.card-calculo-trabalhista-titulo {
+	width: calc( 100% - 30px) ;
+	padding-bottom: 0px;
+}
+
+.card-calculo-trabalhista-titulo h2 {
+	margin-top: 3px;
+	margin-bottom: 3px;
+	font-size: 20px;
+	color: #222;
+}
+
+.card-calculo-trabalhista-descricao {
+	width: calc( 100% - 30px) ;
+	padding-top: 0px;
+}
+
+.card-calculo-trabalhista-descricao img {
+	margin-bottom: 10px;
+}
+
+.card-calculo-trabalhista-descricao-texto {
+	margin: 10px;
+	font-size: 16px;
+}
+
+
+/* indicadores economicos /tabelas/indicadores_economicos */
+
+.h1-tabela-completa {
+	font-size: 28px;
+	font-weight: bold;
+	color: #666;
+}
+
+
+.h2-titulo-card {
+	font-size: 18px !important;
+	margin-top:0px;
+	margin-bottom: 0px;
+}
+
+.quadro-branco-card {
+	width: calc( 95% - 30px) !important;
+	padding: 10px;
+	margin-left: 10px;
+	background-color: #FFF !important;
+	border: 1px solid #CCC;
+	margin-bottom: 20px;
+}
+
+.indicadores-economicos-form-td-1 {
+	text-align: left !important;
+	font-weight: bold;
+}
+
+.indicadores-economicos-form-td-2 {
+	text-align: left !important;
+}
+
+
+.lista_calculo_icone_grande {
+	padding: 7px;
+	color: white;
+	margin-right: 10px;
+	margin-bottom: 15px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 3px;
+}
+
+/*** menu a direita ***/
+
+.mdl-layout__drawer-right {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	-webkit-flex-wrap: nowrap;
+	-ms-flex-wrap: nowrap;
+	flex-wrap: nowrap;
+	width: 240px;
+	height: calc( 100% - 180px); /* 500px; !* 100%; */
+	max-height: 100%;
+	position: fixed;
+	/*
+    position: absolute;
+    */
+	top: 80px;
+	right: 0;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+	box-sizing: border-box;
+	border-right: 1px solid #e0e0e0;
+	background: #fafafa;
+	-webkit-transform: translateX(250px);
+	-ms-transform: translateX(250px);
+	transform: translateX(250px);
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	will-change: transform;
+	-webkit-transition-duration: .2s;
+	transition-duration: .2s;
+	-webkit-transition-timing-function: cubic-bezier(.4,0,.2,1);
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
+	-webkit-transition-property: -webkit-transform;
+	transition-property: transform;
+	color: #424242;
+	overflow: visible;
+	overflow-y: auto;
+	z-index: 5;
+}
+
+.active {
+	-webkit-transform: translateX(0);
+	-ms-transform: translateX(0);
+	transform: translateX(0);
+}
+
+.mdl-layout__obfuscator-right {
+	background-color: transparent;
+	/* position: absolute; */
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 4;
+	visibility: hidden;
+	-webkit-transition-property: background-color;
+	transition-property: background-color;
+	-webkit-transition-duration: .2s;
+	transition-duration: .2s;
+	-webkit-transition-timing-function: cubic-bezier(.4,0,.2,1);
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
+}
+
+.mdl-layout__drawer-right.active~.mdl-layout__obfuscator-right {
+	background-color: #000;
+	opacity: 0.5;
+	visibility: visible;
+}
+
+.mdl-layout__drawer-right>.mdl-layout-title {
+	line-height: 56px;
+	padding-left: 16px;
+}
+
+/*** ORELHINHA ****/
+
+.orelhinha {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	-webkit-flex-wrap: nowrap;
+	-ms-flex-wrap: nowrap;
+	flex-wrap: nowrap;
+	width: 60px;
+	height: 100%; /*300px; !* 100%; */
+	max-height: 40px;
+	position: fixed;
+	top: 90px;
+	right: 0;
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+	box-sizing: border-box;
+	border-right: 1px solid #e0e0e0;
+	background: #66BB6A;
+	border-top-left-radius: 25%;
+	border-bottom-left-radius: 25%;
+	-webkit-transform: translateX(250px);
+	-ms-transform: translateX(250px);
+	transform: translateX(250px);
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	will-change: transform;
+	-webkit-transition-duration: .2s;
+	transition-duration: .2s;
+	-webkit-transition-timing-function: cubic-bezier(.4,0,.2,1);
+	transition-timing-function: cubic-bezier(.4,0,.2,1);
+	-webkit-transition-property: -webkit-transform;
+	transition-property: transform;
+	color: #424242;
+	overflow: visible;
+	overflow-y: auto;
+	z-index: 500;
+	cursor: pointer;
+}
+
+.active {
+	-webkit-transform: translateX(0);
+	-ms-transform: translateX(0);
+	transform: translateX(0);
+}
+
+.orelhinha>.mdl-layout-title {
+	line-height: 56px;
+	padding-left: 16px;
+}
+
+
+/*!*** passo a passo ****!*/
+
+/*.navcalc_node {*/
+/*    height: 10px;*/
+/*    width: 10px;*/
+/*    border-radius: 50%;*/
+/*    display:inline-block;*/
+/*    transition: all 1000ms ease;*/
+/*    font-size: 16px;*/
+/*}*/
+
+/*.navcalc_activated {*/
+/*    box-shadow: 0px 0px 3px 2px rgba(194, 255, 194, 0.8);*/
+/*}*/
+
+/*.navcalc_divider {*/
+/*    height: 30px;*/
+/*    width: 2px;*/
+/*    margin-left: 4px;*/
+/*    transition: all 800ms ease;*/
+/*}*/
+/*.navcalc *, *:after, *:before {*/
+/*	margin-top: -8px;*/
+/*	margin-bottom: -4px;*/
+/*	padding: 0px;*/
+/*}*/
+
+/*.navcalc li p {*/
+/*    display:inline-block;*/
+/*    margin-left: 15px;*/
+/*    margin-top:-3px;*/
+/*}*/
+
+/*.navcalc li {*/
+/*    list-style: none;*/
+/*    line-height: 1px;*/
+/*}*/
+
+/*.navcalc a {*/
+/*   color: #222;*/
+/*   text-decoration: none;*/
+/*   font-weight: normal;*/
+/*}*/
+
+/*.navcalc_blue { background-color: rgba(82, 165, 255, 1); }*/
+/*.navcalc_green{ background-color: rgba(92, 184, 92, 1) }*/
+/*.navcalc_red { background-color: rgba(255, 148, 148, 1); }*/
+/*.navcalc_grey { background-color: rgba(201, 201, 201, 1); }*/
+
+
+.open_modal {
+	cursor: pointer !important;
+}
+
+/* INDEX */
+
+
+.index-call-to-action {
+	background-color: #01841e;
+	padding: 10px;
+	color: #fff;
+	font-weight: bold;
+	text-align: center;
+	min-width: 320px;
+	width: 300px;
+	border-radius: 7px;
+	text-decoration:none;
+	box-shadow: 8px 8px 5px -4px rgba(0,0,0,0.08);
+	-webkit-box-shadow: 8px 8px 5px -4px rgba(0,0,0,0.08);
+	-moz-box-shadow: 8px 8px 5px -4px rgba(0,0,0,0.08);
+	font-size: 16px;
+}
+
+.index-g1-tab1 {
+	margin-left: 30px;
+	/*margin-top: -90px;*/
+}
+
+.index-g1-tab1-col1  {
+	width: 10px;
+	text-align: center;
+	padding-right: 0px !important;
+	padding-left: 10px;
+	padding-right: 0px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.index-g1-tab1-col2  {
+	text-align: left;
+	color: #777;
+	font-size: 20px;
+	padding: 10px;
+	font-weight: bold;
+}
+
+.div-gomo1a {
+	background-color: #fff;
+	text-align: left;
+}
+.div-gomo1b {
+	background-color: #fff;
+	text-align: right !important;
+	min-height: 500px;
+}
+
+.index-g1-titulo1 {
+	color: #3F51B5;
+	margin-left: 30px;
+	margin-bottom: 0px;
+
+}
+
+.index-g2 {
+	background: rgb(153,223,224);
+	background: linear-gradient(90deg, rgba(153,223,224,1) 0%, rgba(74,169,170,1) 100%);
+}
+
+.index-g2-titulo1 {
+	color: #fff;
+	font-weight: 500;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #fff
+
+}
+
+.index-g2-titulo2 {
+	color: #263238;
+	font-weight: 400;
+	font-size: 20px;
+	line-height: 22px;
+}
+
+.atualiza-div-direita-1 {
+	text-align: center;
+}
+
+/*
+.content-atualiza hr {margin: 40px 0 20px !important;}
+.content-atualiza h2 {color: #313131 !important; font-size: 30px !important; font-weight: bold !important; text-align: center !important; margin: 40px 0 8px; padding: 0;}
+.content-atualiza h3 {color: #313131 !important; font-size: 20px !important; text-align: center; margin: 0 !important; padding: 0;}
+*/
+
+.index-g2 ul {}
+.index-g2 ul li {width:100%;list-style-type: none;color:#37474F;text-align: center; font-weight: bold;font-size: 18px;}
+.index-g2 ul li span {
+	background: rgb(255,138,101);
+	background: linear-gradient(90deg, rgba(255,138,101,1) 0%, rgba(255,87,34,1) 8%);
+	display:block; width:80px; height:80px; border-radius:50%; margin:0 auto 20px;text-align: center;
+}
+.index-g2 ul li span i {color: white; font-size: 36px; line-height: 78px; text-align: center;}
+.index-g2 ul li span .icon-coin-dollar {font-size: 44px; line-height: 75px; margin-left: 4px;}
+.index-g2 ul li span .icon-sigma {font-size: 32px; line-height: 79px;}
+.index-g2 ul li h4 {color:#005881; font-size: 20px; font-weight: normal; text-align: center; margin:0 0 10px; padding:0;}
+.index-g2 ul li p {color: #313131; font-size: 15px; font-weight: lighter; text-align: center; line-height: 18px; margin:0; padding:0;}
+
+.index-g3 {
+	background-color: #95D6F6;
+	color: #000;
+	font-size: 24px;
+}
+
+.index-g3-titulo1 {
+	color: #3F51B5;
+	margin-left: 30px;
+	margin-bottom: 0px;
+	font-size: 26px;
+	line-height: 28px;
+
+}
+
+.ul-trabalhista ul {
+	list-style: none;
+}
+
+.ul-trabalhista  li:before {
+	font-family: 'IcoMoon-Ultimate';
+	content: '\e9f2';
+	margin:0 5px 0 -15px;
+	color: #3e51b4;
+}
+
+.index-g3-div-direita1 {
+	background: #fff;
+	background: linear-gradient(90deg, rgba(149,214,246,1) 0%, rgba(216,230,237,1) 100%);
+
+}
+
+.index-g4 {
+	background-color: #fff;
+	padding-bottom: 40px;
+}
+
+.index-g4-titulo1 {
+	color: #3F51B5;
+	margin-left: 30px;
+	margin-bottom: 0px;
+	font-size: 26px;
+	line-height: 28px;
+	font-weight: 700;
+}
+
+.index-g4-div-esquerda1 {
+	border-bottom: 3px solid #ccc;
+	height: 90px;
+}
+
+.index-g4-bolinha {
+	background-color: #03579b;
+	display:block;
+	width:36px;
+	height:30px;
+	border-radius:50%;
+	margin:0 auto 20px;
+	text-align: center;
+	color: #FFF;
+	font-size: 26px;
+	line-height: 30px;
+	padding: 14px 10px 10px 10px;
+}
+
+.index-g4-bolinha-texto {
+	text-align: center;
+	font-size: 16px;
+	color: #333;
+	width: 100%;
+}
+
+.index-g4-div-bolinha {
+	text-align: center;
+}
+
+.index-g5 {
+	background: rgb(197,229,244);
+	background: linear-gradient(90deg, rgba(197,229,244,1) 0%, rgba(127,198,231,1) 100%);
+}
+
+.index-g5-titulo1 {
+	color: #3F51B5;
+	margin-left: 30px;
+	margin-bottom: 0px;
+	font-size: 26px;
+	line-height: 28px;
+	font-weight: 700;
+	padding-bottom: 20px;
+	border-bottom: 2px solid #fff;
+}
+
+.index-g5-div-lista{
+	padding-left: 40px;
+}
+
+.index-g5-medalha {
+	color: #fff;
+	font-size: 80px;
+	line-height: 120px;
+	vertical-align: middle;
+}
+
+.ul-ponto ul {
+	list-style: none;
+	font-size: 20px;
+}
+
+.ul-ponto  li:before {
+	font-family: 'IcoMoon-Ultimate';
+	content: '\ece6';
+	margin:0 5px 0 -15px;
+	color: #3e51b4;
+}
+
+/** trabalhista externa **/
+
+.trabalhista-g1 {
+	background: rgb(149,214,246);
+	background: linear-gradient(90deg, rgba(149,214,246,1) 33%, rgba(255,255,255,1) 51%);
+
+}
+
+.trabalhista-g1-titulo1 {
+	color: #03579b;
+	margin-left: 30px;
+	margin-bottom: 0px;
+	font-size: 68px;
+}
+
+.trabalhista-g1-texto1 {
+	color: #03579b;
+	margin-left: 10px;
+	margin-right: 20px;
+	margin-bottom: 0px;
+	font-size: 28px;
+	line-height: 30px;
+	padding-left: 40px;
+	padding-left: 40px;
+	font-weight: 500;
+	min-height: 100px;
+}
+
+.trabalhista-g2 {
+	color: #000;
+	background-color: #FFC107;
+	font-size: 26px;
+	font-weight: bold;
+	vertical-align: middle;
+	line-height: 50px;
+	min-height: 50px;
+	padding-right: 40px;
+}
+
+.trabalhista-g2-div1 {
+	width:100%;
+	text-align: center;
+}
+
+.cartao_nav {
+	padding: 1px;
+	font-size: 10px !important;
+	background-color: #fafafa;
+	color: #333;
+	width: 20px !important;
+	height: 20px  !important;
+	min-width: 20px  !important;
+}
+
+.cartao_nav_select {
+	margin-left: 0px;
+	margin-right: 20px;
+	line-height: 28px;
+	font-size: 20px;
+	color: #333;
+	background-color: #fafafa;
+	border-color: #eee;
+	height: 38px;
+}
+
+.item-carousel-1 {
+	background-color: #fff;
+	border: 1px #CCC solid;
+	min-height: 100px;
+	padding: 20px;
+	vertical-align: middle;
+
+}
+
+.img-carousel-1 {
+	margin: auto;
+}
+
+
+/* Tabela do cálculo trabalhista */
+
+.atualiza-index-indices {
+	font-size: 18px;
+	line-height: 18px;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.atualiza-index-indices td {
+	color: #333;
+	text-align: left;
+	border: 1px #DDD solid;
+	height: 30px;
+	padding: 6px;
+	vertical-align: top;
+	line-height: 28px;
+	font-size: 18px;
+}
+
+.atualiza-index-indices th {
+	color: #555;
+	text-align: left;
+	border: 1px #DDD solid;
+	background-image: linear-gradient(#FFF, #EEE);
+	padding: 5px;
+	height: 30px;
+}
+
+.atualiza-index-indices a {
+	text-decoration: none;
+}
+
+.atualiza-index-circulo {
+	background-color: #3F51B5;
+	display:block;
+	width:80px;
+	height:70px;
+	border-radius:50%;
+	margin:0 auto;
+	text-align: center;
+	font-size: 44px;
+	line-height: 48px;
+	padding-top: 15px;
+	padding-bottom: -15px;
+	color: #FFF;
+
+}
+
+.atualiza-index-juros-1 {
+	font-size: 36px;
+	color: #000;
+	text-align: center;
+	padding: 20px;
+}
+
+.atualiza-index-juros-2 {
+	font-size: 18px;
+	color: #000;
+	text-align: center;
+	padding: 20px;
+}
+
+.quadro_pedido {
+	border: 1px #DDD solid;
+	padding: 20px;
+	border-collapse: collapse;
+}
+
+.quadro_pedido td {
+	border: 1px #DDD solid;
+	padding: 10px;
+}
