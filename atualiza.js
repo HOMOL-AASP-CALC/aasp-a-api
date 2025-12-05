@@ -25,6 +25,8 @@ const calcUtil = require('./calcUtil.js');
 var http = require('http');
 var express = require('express');
 var cors = require('cors')
+const favicon = require('serve-favicon');
+const path = require('path');
 
 var bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
@@ -42,12 +44,10 @@ var qs = require('querystring')
 
 const PDFDocument = require("./pdfkit-tables");
 var cookieParser = require('cookie-parser');
-// let arqLog = fs.createWriteStream( process.env.pasta_log + '/log-atualiza.txt');
 var pasta_env = process.env.pasta_calculos
 const servidorAPI = process.env.servidorAPI
 
 const calcPDF = require('./calcPDF.js');
-// const calcHTML = require('./calcHTML.js');
 const calcHTML = require('./atualizaHTML_v3_1.js');
 
 var socketList = [] 
@@ -71,7 +71,6 @@ const corsOptionsDelegate = function (req, callback) {
     credentials: true
   }
 
-
   if (allowedDomains.indexOf(req.header('Origin')) !== -1) {
     // console.log('entrou')
     corsOptions.origin =true; // Permitir domínio na lista
@@ -84,15 +83,12 @@ const corsOptionsDelegate = function (req, callback) {
 
 
 
-
-
-
 var app = express();
-// app.use(cors(  cors1 ))
 app.use(cors( corsOptionsDelegate ));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 const server = http.createServer(app);
 var axios = require('axios');
@@ -372,6 +368,7 @@ app.get('/atualiza/listaTabelas',  async function (req, res) {
 	res.send(r)
 })
 
+
 app.get('/atualiza/listaTabelasMescladas',   async function (req, res) {
 	let c = cookie_uncrypt( req.cookies['c_v_app'], req.headers  )
 	let id_dono = c.v_id_dono 
@@ -600,10 +597,12 @@ app.get('/s'+porta_api.toString()+'/xxxxxduplicar/:id', async function(req, res)
 app.get('/s'+porta_api.toString()+'/html/:id', async function(req, res) {
 	var id = req.params.id
 	console.log('/s'+porta_api.toString()+'/html/'+id)
+	let adviseLogo = false;
 
 	let c1 = req.cookies['c_v_app'] 
 	if (!c1) {
 		c1 = req.cookies['access_token']
+		adviseLogo = true
 	}
 
 	var c = cookie_uncrypt( c1 , req.headers ) 
@@ -624,8 +623,36 @@ app.get('/s'+porta_api.toString()+'/html/:id', async function(req, res) {
 	let mesAmes = (calc[ id ].info.calc_modo_impressao == 'm')
 	// let mesAmes = true
 	let calc1= await efetuar_calculo(calc[ id ], p1, mesAmes, -1, c.v_assinante_atualiza) 
-	res.send( calcHTML.montaCalc( calc1 ))
+	res.send( calcHTML.montaCalc( calc1, adviseLogo ))
 });
+
+app.post('/s'+porta_api.toString()+'/renomeia', jsonParser, async function (req, res) {
+	let idCalc = req.body.idCalc
+	let novoNome = req.body.nome.replace(/"/g, '')
+	let c = cookie_uncrypt( req.cookies['c_v_app'] ,  req.headers  )
+	// let c = { v_id_dono: 15 }
+	if (!c.v_id_dono) { res.send('{success:0,erro: "sem permissão"}'); return; }
+	
+	let permissao1 = await permissoes_ativas( idCalc, c, c.v_usuario_logado )
+	let p1 = permissao1.find( x => x.id == c.v_id_dono )
+	if (typeof p1 === 'undefined' || p1 == null)  { res.send('{success:0,erro: "sem permissão 2"}'); return; }
+
+	let q1 = `UPDATE calculos.atualizacaoMonetaria SET nome="${novoNome}" WHERE  id="${idCalc}" AND id_login="${c.v_id_dono}"  `
+	con2.query(q1);
+
+	if (typeof calc[idCalc] === 'undefined'  || calc[idCalc] ==null) {
+		le_arquivo( idCalc, async function (res2) {
+			calc[idCalc].info.nome = novoNome
+			salvarCalc( idCalc )
+			res.send('{success:1,msg: "cálculo renomeado"}'); 
+		})
+	} else {
+		calc[idCalc].info.nome = novoNome
+		salvarCalc( idCalc )
+		res.send('{success:1,msg: "cálculo renomeado"}');
+	}
+});
+
 
 function getCookieFromSocket( handshake ) {
 	var cookie1 = handshake + ';'
@@ -757,7 +784,6 @@ io.on('connection',  (socket) => {
 			calc[idCalc].permissoes = permissao1
 			socket.emit('calcDump', await efetuar_calculo( calc[ idCalc ], p1, false, -1, c.v_assinante_atualiza ) )
 		}
-
 	});
 
 	socket.on('set', async (dados) => {
@@ -786,15 +812,8 @@ io.on('connection',  (socket) => {
 		}
 	 
 		if (campo == 'info.nome') {
-			var params = new URLSearchParams();
-			params.append('id_dono', coo.v_id_dono );
-			params.append('idCalc', idCalc);
-			params.append('nomeCalc', info);
-
-			axios.post(urlRenomeiaCalc, params)
-			.catch(function (error) {
-				console.log('erro axios processos.js l: 474 - ', urlRenomeiaCalc)
-			});			
+			let q1 = `UPDATE calculos.atualizacaoMonetaria SET nome="${info}" WHERE  id="${idCalc}" AND id_login="${coo.v_id_dono}"  `
+			con2.query(q1)
 		}
 
 		if (campo == 'info.indexador') {

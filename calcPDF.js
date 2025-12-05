@@ -362,12 +362,12 @@ module.exports = {
                         tabela.rows.push(['normal', 'Selic',`de ${l.selic_ini} a ${l.selic_fim}`, `R$ ${calcUtil.formataNum(l.base,2)}  x ${calcUtil.formataNum(l.resultado_selic_percentual,2)}%`, calcUtil.formataNum(l.resultado_selic,2)])
                         resumoSoma.selic.v += Number(l.resultado_selic)
  
-                        if (dump.info.calc_modo_impressao == 'm') {     
-                            for (var m in l.resultado_selic_mesAmes) {
-                                var m1 = l.resultado_selic_mesAmes[m]
-                                tabela.rows.push([ 'mesames', '', m1.dia, m1.str, calcUtil.formataNum(m1.valor,2), ''])
-                            }
-                        }
+                        // if (dump.info.calc_modo_impressao == 'm') {     
+                        //     for (var m in l.resultado_selic_mesAmes) {
+                        //         var m1 = l.resultado_selic_mesAmes[m]
+                        //         tabela.rows.push([ 'mesames', '', m1.dia, m1.str, calcUtil.formataNum(m1.valor,2), ''])
+                        //     }
+                        // }
                         
                     }
 

@@ -25,12 +25,6 @@ const pasta_env  = process.env.pasta_calculos
 
 const superHashAbreCalc = 'superHashRozgrin'
 
-const cors1 = {
-    origin: "https://calcs.debit.com.br",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true
-}
-
 var mysql_senha = process.env.MYSQL_password2
 var listaTabelas  = [] 
 var tabelas = {} 
@@ -611,9 +605,10 @@ app.post('/calculosDiversos/tabelaDireta',  async function(req, res) {
     res.send( r )
 })
 
-app.get('/calculosDiversos/pdfT4/:idCalc',  async function(req, res) {
+app.get('/calculosDiversos/pdfT4/:tipo/:idCalc',  async function(req, res) {
+    let tipo = req.params.tipo
     let idCalc = req.params.idCalc
-    let pasta = process.env.pasta_calculos + '/' + parseInt(idCalc / 10000)
+    let pasta = process.env.pasta_trabalhista_antigo + '/' + parseInt(idCalc / 10000)
     let c = cookie_uncrypt( req.cookies['c_v_app'] )
 
     try {
@@ -624,27 +619,33 @@ app.get('/calculosDiversos/pdfT4/:idCalc',  async function(req, res) {
             return;
         }
 
-        // if (rows[0].id_login != c.v_id_dono) {
-        //     res.send({ sucesso: 0, msg: 'sem_permissao' });
-        //     return;
-        // }
+        if (rows[0].id_login != c.v_id_dono) {
+            res.send({ sucesso: 0, msg: 'sem_permissao' });
+            return;
+        }
 
         try {
-            const nomeArquivo = `${pasta}/${idCalc}.pdf`;
+            const nomeArquivo = `${pasta}/${idCalc}.t4.${tipo}`;
             if (!fs.existsSync(nomeArquivo)) {
                 res.status(404).send({ sucesso: 0, msg: 'arquivo_nao_encontrado' });
                 return;
             }
-            const pdfBuffer = await fs.promises.readFile(nomeArquivo);
-            res.writeHead(200, {
-                'Content-Type': 'application/pdf',
-                'Content-Length': pdfBuffer.length
-            });
-            res.end(pdfBuffer);
-            return;
+            if (tipo == 'pdf') {
+                const pdfBuffer = await fs.promises.readFile(nomeArquivo);
+                res.writeHead(200, {
+                    'Content-Type': 'application/pdf',
+                    'Content-Length': pdfBuffer.length
+                });
+                res.end(pdfBuffer);
+               return;
+            } else {
+                const htmlContent = await fs.promises.readFile(nomeArquivo);
+                res.send(htmlContent);
+                return;
+            }
         } catch (err) {
-            console.error('erro lendo pdf:', err);
-            res.status(500).send({ sucesso: 0, msg: 'erro_lendo_pdf' });
+            console.error('erro lendo arquivo:', err);
+            res.status(500).send({ sucesso: 0, msg: 'erro_ler_arquivo' });
             return;
         }
 
@@ -654,6 +655,53 @@ app.get('/calculosDiversos/pdfT4/:idCalc',  async function(req, res) {
         return;
     }
 })
+
+app.get('/calculosDiversos/pontoAntigo/:idCalc',  async function(req, res) {
+    let tipo = req.params.tipo
+    let idCalc = req.params.idCalc
+    let pasta = process.env.pasta_trabalhista_antigo + '/' + parseInt(idCalc / 10000)
+    let c = cookie_uncrypt( req.cookies['c_v_app'] )
+
+    try {
+        const [rows] = await con.promise().query('SELECT id_login FROM calculos.cartaoPonto WHERE id = ? LIMIT 1',[idCalc]);
+
+        if (!rows || rows.length === 0) {
+            res.send({ sucesso: 0, msg: 'calculo_nao_encontrado' });
+            return;
+        }
+
+        if (rows[0].id_login != c.v_id_dono) {
+            res.send({ sucesso: 0, msg: 'sem_permissao' });
+            return;
+        }
+
+        try {
+            const nomeArquivo = `${pasta}/${idCalc}.cartaoPonto.html`;
+            if (!fs.existsSync(nomeArquivo)) {
+                res.status(404).send({ sucesso: 0, msg: 'arquivo_nao_encontrado' });
+                return;
+            }
+
+            const htmlContent = await fs.promises.readFile(nomeArquivo, 'utf8');
+            res.setHeader('Content-Disposition', 'inline');
+            res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            res.send(htmlContent);
+            return;
+  
+        } catch (err) {
+            console.error('erro lendo arquivo:', err);
+            res.status(500).send({ sucesso: 0, msg: 'erro_ler_arquivo' });
+            return;
+        }
+
+    } catch (err) {
+        console.error('erro consulta lista_calculo:', err);
+        res.send({ sucesso: 0, msg: 'erro_consulta' });
+        return;
+    }
+})
+
+
 
 app.post('/calculosDiversos/leParcial',  async function(req, res) {
     let idCalc = req.body.id
@@ -690,6 +738,8 @@ app.post('/calculosDiversos/leCalculo',  async function(req, res) {
         c = { v_id_dono: 4, v_usuario_logado: 0 }
     }
 
+
+
     if (!id || id==0 || typeof id === 'undefined') {
         let ncalc = await criaCalculo(tipo, c.v_id_dono, c.v_usuario_logado)
         ncalc = calculadora[ tipo ].posLeituraArquivo( ncalc ) 
@@ -699,7 +749,7 @@ app.post('/calculosDiversos/leCalculo',  async function(req, res) {
         return;
     } else {
         let calc = calcMem[ tipo ][ id ]
-
+       
         if (!calc || calc == null || typeof calc === 'undefined') {
             if (!hash) {
                 let q1 = `SELECT * FROM ${tipo} WHERE id="${id}" and id_login="${c.v_id_dono}" `
@@ -722,7 +772,6 @@ app.post('/calculosDiversos/leCalculo',  async function(req, res) {
             calc.editavel = true
         }
 
-        // console.log(calc.hash, hash)
         if (calc && (calc.idDono == c.v_id_dono || calc.hash == hash)) {
             calc = calculadora[ tipo ].posLeituraArquivo( calc )
             res.send( calc )
@@ -1186,7 +1235,7 @@ app.post('/calculosDiversos/gravaPesquisa', async function (req, res) {
 
 })
 
-app.get('/lista',  cors( cors1 ), function (req, res) {
+app.get('/lista', function (req, res) {
 	var l  = "<html><h1>Cálculos Diversos</h1><br />"
 	var l = l + "<table style='padding: 10px; border: 1px solid grey;'>"
 	for (c in calcMem.calculosJudiciais) {
@@ -1220,7 +1269,7 @@ app.get('/calculosDiversos/listaC', function(req, res) {
 })
 
 server.listen(porta_api, () => {
-  console.log('Debit Calculos Diversos v.2024 / porta: '+ porta_api, cors1);
+  console.log('Debit Calculos Diversos v.2024 / porta: '+ porta_api);
 });
 
 
