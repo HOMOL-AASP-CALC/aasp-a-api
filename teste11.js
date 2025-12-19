@@ -1,5 +1,21 @@
+const axios = require('axios');
+require('dotenv').config()  
+var servidorAPI = process.env.servidorAPI
 
 
-let x = `(echo '[{\"dia\":\"01/01/2010\",\"valor\":10000}, {\"dia\":\"01/02/2010\",\"valor\":20000}]' | jq -c)`
+async function rodar() {
 
-let y = JSON.parse(x)
+    let url1 = `${servidorAPI}/s3052/renomeia` 
+
+    let dados = {
+        nome: 'yyyy Newww',
+        idCalc: 26058672
+    }
+  
+    await axios.post(url1, dados).then( function(r) {
+        console.log( JSON.stringify(r.data) )
+    })
+
+}
+
+rodar()

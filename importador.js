@@ -29,11 +29,8 @@ var calcUtil = require('./calcUtil.js');
 var calc = {}  
 var tabelaMaximo = [] 
 
-var senha = process.env.MYSQL_password
-if (process.env.MYSQL_host == "localhost") {
-} else {
-	senha = senha+"#";
-}
+var senha = process.env.MYSQL_password2
+
 
 
 resetCalc = function(id) {

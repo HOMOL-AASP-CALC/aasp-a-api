@@ -6,12 +6,10 @@ module.exports = function() {
 	const calcUtil = require('./calcUtil.js');
 	const BigNumber = require('bignumber.js');
 
-	this. mysql_senha = process.env.MYSQL_password
+	this. mysql_senha = process.env.MYSQL_password2 
 	var servidorAPI = process.env.servidorAPI
 
-	if (process.env.MYSQL_host != "localhost") {
-		this.mysql_senha = this.mysql_senha+"#";
-	}
+
 	this.mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: this.mysql_senha, database: process.env.MYSQL_database, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 	this.listaTabelas  = [] 
 	this.tabelas  = {} 

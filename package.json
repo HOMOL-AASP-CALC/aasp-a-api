@@ -30,6 +30,7 @@
     "redoc-express": "^1.0.0",
     "serve-favicon": "^2.5.1",
     "socket.io": "^4.6.1",
-    "swagger-jsdoc": "^3.7.0"
+    "swagger-jsdoc": "^3.7.0",
+    "p-limit": "^7.2.0"
   }
 }

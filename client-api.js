@@ -21,9 +21,7 @@ const cors1 = {
 }
 
 var mysql_senha = process.env.MYSQL_password2
-// if (process.env.MYSQL_host != "localhost") {
-// 	mysql_senha = mysql_senha+"#";
-// }
+
 const mysql = require('mysql2');  
 const { default: axios } = require('axios');
 var mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: mysql_senha, database: process.env.MYSQL_database }

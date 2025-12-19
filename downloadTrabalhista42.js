@@ -68,7 +68,7 @@ async function executar() {
   const pool = await createPool();
 
   try {
-    const [registros] = await pool.query('SELECT id FROM lista_calculo WHERE tipo = ? and lixo=0 ORDER BY id DESC limit 50000', ['t4']);
+    const [registros] = await pool.query('SELECT id FROM lista_calculo WHERE tipo = ? and lixo=0 ORDER BY id ASC limit 50000', ['t4']);
 
     console.log(`Encontrados ${registros.length} cálculos do tipo t4.`);
 
@@ -97,11 +97,6 @@ async function executar() {
     await pool.end();
   }
 }
-
-setInterval(() => {
-  const url = 'https://legacy.debit.com.br/trabalhista4/matador3.php';
-  axios.get(url, { responseType: 'arraybuffer', timeout: 60000 });
-}, 1000 * 60 * 30);
 
 executar().catch((erro) => {
   console.error('Erro não tratado:', erro.message || erro);

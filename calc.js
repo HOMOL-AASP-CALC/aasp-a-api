@@ -6,12 +6,10 @@ module.exports = function() {
 	const calcUtil = require('./calcUtil.js');
 	const BigNumber = require('bignumber.js');
 
-	this. mysql_senha = process.env.MYSQL_password
+	this. mysql_senha = process.env.MYSQL_password2 
 	var servidorAPI = process.env.servidorAPI
 
-	if (process.env.MYSQL_host != "localhost") {
-		this.mysql_senha = this.mysql_senha+"#";
-	}
+
 	this.mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: this.mysql_senha, database: process.env.MYSQL_database, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 	this.listaTabelas  = [] 
 	this.tabelas  = {} 
@@ -469,6 +467,7 @@ module.exports = function() {
 	}
 
 	this.pegasoma = async function (dia1, dia2, tabela, adicionar_mes_soma=1, calc_prorata=false) { 
+		
 	  	let casasDecimais = (tabela == 109) ? 6 : 2 
 	  	let dia0 = dia1 
 	  	let dia2original = dia2
@@ -476,6 +475,8 @@ module.exports = function() {
 	  	let resultadoDetalhado = []
 
 		let tabela1 = JSON.parse( JSON.stringify( this.tabelas[ tabela ] )) 
+		let tabela_selic = (tabela==31 || tabela==72) 
+		// let tabela_selic = (tabela==23 || tabela==31 || tabela==72) 
 
 		if (tabela==31 || tabela==72)  {  // selic_receita
 			if (adicionar_mes_soma) dia1 = calcUtil.somaMes(dia1);
@@ -489,67 +490,45 @@ module.exports = function() {
 		}
 
 		resultado = new BigNumber(0);
+		let n_item = 0;
 		for (let e1 = primeiro_dia1;  e1 <= primeiro_dia2; e1++) {
 			let e = tabela1[e1]
+
+			// calcula pro-rata 
+			if ( (calc_prorata) && (n_item==0) ) {
+				e.valor = (e.valor / calcUtil.diasMes( dia0 )) * ( (calcUtil.dia2intDia( dia2 )  - calcUtil.dia2intDia( dia0 )) +1);
+			}
+			// fim calcula pro-rata
+			if ((calc_prorata) && (e1 == primeiro_dia2) && (n_item > 0) ) {
+				e.valor = (e.valor / calcUtil.diasMes( dia2original )) * calcUtil.dia2intDia( dia0 );
+			}
+
 			let v = 0;
 			if (e && typeof e.valor !== 'undefined' && e.valor != null) {
 				v = e.valor
 			}
 			
-			if ( e1 == primeiro_dia2) { v = 1;  }
+			if (tabela_selic && e1 == primeiro_dia2) { v = 1;  }
 			if (e && v != -100) {
-				resultado = resultado.plus( v );
-				resultadoDetalhado.push( { dia: e.dia, valor: v, resultado: resultado.toFixed(casasDecimais) } )
+				resultado = resultado.plus( v.toFixed(15)  );
+				let resultado2 = null;
+
+				if (tabela_selic && n_item > 0) {
+					let r2 = new BigNumber(resultadoDetalhado[ n_item-1 ].resultado) 
+					r2 = r2.plus(1)
+					resultado2 = r2.toNumber().toFixed(casasDecimais)
+				}
+
+				if (resultado2 === null) {
+					resultado2 = resultado.toNumber().toFixed(casasDecimais)
+				}
+
+				resultadoDetalhado.push( { dia: e.dia, valor: v, resultado: resultado.toFixed(casasDecimais), resultado2 } )
+
+				n_item++;
 			}
 		}
 
-	
-	var tabelaUsada = this.tabelas[ tabela ]
-
-	//   console.table(tabelaUsada)
-	  if (calc_prorata) {
-		if (calcUtil.dia2intMesAno(dia0) == calcUtil.dia2intMesAno(dia2))  {
-			var i1 = tabelaUsada[ primeiro_dia1  ];
-			if (typeof i1 === 'undefined' ||  typeof i1.valor === 'undefined') {
-				console.log('l: 400 - erro no pro-rata ')
-				resultado = 0 
-			} else {
-				var v1 = (i1.valor / calcUtil.diasMes( dia0 )) * ( (calcUtil.dia2intDia( dia2 )  - calcUtil.dia2intDia( dia0 )) +1);
-				resultado = resultado - i1.valor + v1;  
-			}
-		} else {
-	
-			var ma1 = primeiro_dia1
-			var i1 = tabelaUsada[ ma1 ]
-			if (typeof i1 === 'undefined' || typeof i1.valor === 'undefined') {
-				console.log('saindo - l 410 - erro no pro-rata - i1, tabela, primeiro_dia1 ', i1, tabela, primeiro_dia1, ma1)
-				return 0
-			}
-			var v1 = (i1.valor / calcUtil.diasMes( dia0 )) * ((calcUtil.diasMes( dia0 )-calcUtil.dia2intDia( dia0 ))+1);
-			resultado = resultado - i1.valor + v1; 
-			var ma2 = primeiro_dia2
-			// console.log('ma2', ma2)
-			var i2 = tabelaUsada[ ma2 ]
-			if (typeof i2 === 'undefined' || typeof i2.valor === 'undefined') {
-				console.log('saindo - l 418 - erro no pro-rata - i2, tabela, primeiro_dia2 ', i2, tabela, primeiro_dia2)
-		
-				return 0
-			}
-			if (typeof i2 === 'undefined' || typeof i2.valor === 'undefined') {
-				console.log('l: 415 - erro no pro-rata l; 412 - calc - primeiro_dia2=',tabela, primeiro_dia2)
-				return 0 
-			} else {
-				// var v2 = (i2.valor / calcUtil.diasMes( dia0 )) * calcUtil.dia2intDia( dia2original );
-				var v2 = (i2.valor / calcUtil.diasMes( dia2original )) * calcUtil.dia2intDia( dia2original );
-				// console.log('----')
-				// console.log(resultado, i2.valor, v2)
-				// console.log('----')
-				resultado = resultado - i2.valor + v2; 
-			}
-		} 
-	  }
-
-	//   console.log('resultado', resultado.toString() , resultadoDetalhado)
 
 	  return { resultado: Number(resultado), resultadoDetalhado };
 	}
@@ -575,6 +554,7 @@ module.exports = function() {
 
 
 	this.a_selic = async function(dia, v1, dia_atualiza, idTab, adicionar_mes_soma=false, prorata=false) {
+		// console.log(dia, v1, dia_atualiza, idTab)
 		v1 = Number(v1)
 		var dia0 = dia 
 		var dia1 =  dia // calcUtil.strPrimeiroDia( dia )
@@ -602,32 +582,37 @@ module.exports = function() {
 				indice: nomeIndice,
 				dia: dia,
 				str: calcUtil.moeda(dia)+' '+calcUtil.formataNum(v1, 2)+' x '+resultado+'%',
-				valor: valor.toFixed(2)
+				valor: valor.toFixed(2) 
 			}] 
 		}
-		
-		dia1 = calcUtil.somaMes(dia1)
+	
 
-		while ( calcUtil.dia2yyyymmddInt( calcUtil.strPrimeiroDia(dia1)  ) <= calcUtil.dia2yyyymmddInt(dia2) ) {
-			var avalor = valor 
-			var ac1 = await this.pegasoma(dia0, dia1, idTab, adicionar_mes_soma, prorata) 
-			var ac = ac1.resultado
-			valor = v0.times( ((ac/100)+1).toFixed(15) )
+		var ac1 = await this.pegasoma(dia0, dia2, idTab, adicionar_mes_soma, prorata) 
+		let n_ac1 = ac1.resultadoDetalhado.length
+		let t = null 
+		let valor_final = valor
 
-			let t = { 
-				indice: nomeIndice,
-				dia: dia1,
-				str: calcUtil.moeda(dia1)+' '+calcUtil.formataNum(avalor.toFixed(2), 2)+' x '+ac+'%',
-				valor: valor.toFixed(2)
-			}
-			// console.log( t)
-			memoria.push( t )
-			dia1 = calcUtil.somaMes(dia1)
+		for (let pos=0; pos < n_ac1; pos++) {
+			let dia5 = calcUtil.yyyymmdd2dia(ac1.resultadoDetalhado[ pos ].dia)
+
+			if (pos>0) {
+				let ac = ac1.resultadoDetalhado[ pos ].resultado2
+				let valor = new BigNumber(v0)
+				valor =valor.times( ((ac/100)+1).toFixed(15) )
+				valor_final = valor 
+				t = { 
+					indice: nomeIndice,
+					dia: dia5,
+					str: calcUtil.moeda(dia5)+' '+calcUtil.formataNum(v0, 2)+' x '+ac+'%',
+					valor: valor.toFixed(2) 
+				}
+				memoria.push( t )
+			} 	
 		}
 
-		var indiceN = valor / v1 
+		var indiceN = valor_final / v1 
 		memoriaSimples = memoriaSimples+' x '+calcUtil.formataNum(indiceN, 6) 
-		var res = { resultado: valor.toFixed(2), memoria, memoriaSimples } 
+		var res = { resultado: valor_final, memoria, memoriaSimples } 
 
 		return res
 	}
@@ -709,7 +694,6 @@ module.exports = function() {
 
 	this.pega_juros = async function  (dia, diaFim, jInfo) {
 
-		// console.log('pega_juros 710 ', jInfo)
 
 		var r = 0;
 		if (typeof jInfo === 'undefined') { console.log('juros não preenchido'); return 0; } 
@@ -1051,6 +1035,10 @@ module.exports = function() {
 
 		if (typeof c === 'undefined' || c == null || typeof c.info === 'undefined') { console.log('erro ao tentar efetuar o cálculo'); return null;  }
 		
+		if (c.info.indexador == 23 && c.info.calc_perc_prorata) {
+			c.info.calc_perc_prorata = false
+		}
+
 		// analisa data de atualização
 		c.info.diaAtualizacaoErro = ''
 
@@ -1274,7 +1262,7 @@ module.exports = function() {
 						if (infoIndice.calculo == "tabelasJudiciais") {
 							if ( calcUtil.dia2yyyymmddInt(dia_v) <= calcUtil.dia2yyyymmddInt(c.info.dia_atualiza) ) {
 								var temp2 = await this.a_tabelaJudicial( dia_v, c.lista[i].valor, c.info.dia_atualiza, c.info.tabelaJudicial )
-								// console.table( temp2.memoria)
+
 								temp1 = temp2.resultado
 							} else {
 								var temp2 = { memoria: [], memoriaSimples: '', resultado: c.lista[i].valor }
@@ -1976,14 +1964,12 @@ module.exports = function() {
 		diaCalculoGratuito = calcUtil.dia2yyyymmddInt( calcUtil.diminuiAno( calcUtil.diminuiAno( calcUtil.diaHoje() )))
 
 		var senha = process.env.MYSQL_password2
-		// if (process.env.MYSQL_host != "localhost") { senha = senha+"#"; }
 		var [res1] =  await this.con.query('select indice, maximo, nome, calculo, tabela, inicio, mesclavel, ativo_novo_atualiza from maximo where (ativo=1 or ativo_novo_atualiza=1)  order by nome') 
 
 		this.listaTabelas  = []
 		for (var i in res1) {
 			this.listaTabelas[ res1[i].indice ] = res1[i]
 		}
-		// console.table(this.listaTabelas)
 
 		for (var i in this.listaTabelas) {
 			var id = this.listaTabelas[i].indice

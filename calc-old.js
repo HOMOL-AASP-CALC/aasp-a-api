@@ -6,12 +6,9 @@ module.exports = function() {
 	const calcUtil = require('./calcUtil.js');
 	const BigNumber = require('bignumber.js');
 
-	this. mysql_senha = process.env.MYSQL_password
+	this. mysql_senha = process.env.MYSQL_password2 
 	var servidorAPI = process.env.servidorAPI
 
-	if (process.env.MYSQL_host != "localhost") {
-		this.mysql_senha = this.mysql_senha+"#";
-	}
 	this.mysql_info = {host: process.env.MYSQL_host, 	user: process.env.MYSQL_user,	password: this.mysql_senha, database: process.env.MYSQL_database, multipleStatements: true,    waitForConnections: true,    connectionLimit: 10,    queueLimit: 0 }
 	this.listaTabelas  = [] 
 	this.tabelas  = {} 
@@ -506,7 +503,7 @@ module.exports = function() {
 	
 	var tabelaUsada = this.tabelas[ tabela ]
 
-	console.log('l:509 - calc_prorata old ', calc_prorata)
+	//   console.table(tabelaUsada)
 	  if (calc_prorata) {
 		if (calcUtil.dia2intMesAno(dia0) == calcUtil.dia2intMesAno(dia2))  {
 			var i1 = tabelaUsada[ primeiro_dia1  ];
@@ -527,25 +524,29 @@ module.exports = function() {
 			}
 			var v1 = (i1.valor / calcUtil.diasMes( dia0 )) * ((calcUtil.diasMes( dia0 )-calcUtil.dia2intDia( dia0 ))+1);
 			resultado = resultado - i1.valor + v1; 
-			console.log('old v1', i1.valor, v1)
-			
 			var ma2 = primeiro_dia2
 			// console.log('ma2', ma2)
 			var i2 = tabelaUsada[ ma2 ]
 			if (typeof i2 === 'undefined' || typeof i2.valor === 'undefined') {
 				console.log('saindo - l 418 - erro no pro-rata - i2, tabela, primeiro_dia2 ', i2, tabela, primeiro_dia2)
+		
 				return 0
 			}
-
-			var v2 = (i2.valor / calcUtil.diasMes( dia2original )) * calcUtil.dia2intDia( dia2original );
-			console.log('old v2', dia2original, i2.valor, v2)
-			resultado = resultado - i2.valor + v2; 
-			
+			if (typeof i2 === 'undefined' || typeof i2.valor === 'undefined') {
+				console.log('l: 415 - erro no pro-rata l; 412 - calc - primeiro_dia2=',tabela, primeiro_dia2)
+				return 0 
+			} else {
+				// var v2 = (i2.valor / calcUtil.diasMes( dia0 )) * calcUtil.dia2intDia( dia2original );
+				var v2 = (i2.valor / calcUtil.diasMes( dia2original )) * calcUtil.dia2intDia( dia2original );
+				// console.log('----')
+				// console.log(resultado, i2.valor, v2)
+				// console.log('----')
+				resultado = resultado - i2.valor + v2; 
+			}
 		} 
 	  }
 
-		  console.log('resultado old', resultado)
-		  console.table(resultadoDetalhado)
+	//   console.log('resultado', resultado.toString() , resultadoDetalhado)
 
 	  return { resultado: Number(resultado), resultadoDetalhado };
 	}
@@ -590,7 +591,7 @@ module.exports = function() {
 
 		 
 
-		if ((calcUtil.dia2intMesAno(dia0) == calcUtil.dia2intMesAno(dia2)) && (prorata)) { 
+		if ((calcUtil.dia2intMesAno(dia0) == calcUtil.dia2intMesAno(dia2)) && (prorata)) {
 			var resultado1 = await this.pegasoma(dia0, dia2, idTab, adicionar_mes_soma, true)
 			var resultado = resultado1.resultado
 			var valor = valor.times(1+(resultado.toFixed(12)/100))
@@ -1047,10 +1048,6 @@ module.exports = function() {
 
 		if (typeof c === 'undefined' || c == null || typeof c.info === 'undefined') { console.log('erro ao tentar efetuar o cálculo'); return null;  }
 		
-		if (c.info.indexador == 23 && c.info.calc_perc_prorata) {
-			c.info.calc_perc_prorata = false
-		}
-
 		// analisa data de atualização
 		c.info.diaAtualizacaoErro = ''
 
@@ -1976,7 +1973,7 @@ module.exports = function() {
 		diaCalculoGratuito = calcUtil.dia2yyyymmddInt( calcUtil.diminuiAno( calcUtil.diminuiAno( calcUtil.diaHoje() )))
 
 		var senha = process.env.MYSQL_password2
-		// if (process.env.MYSQL_host != "localhost") { senha = senha+"#"; }
+
 		var [res1] =  await this.con.query('select indice, maximo, nome, calculo, tabela, inicio, mesclavel, ativo_novo_atualiza from maximo where (ativo=1 or ativo_novo_atualiza=1)  order by nome') 
 
 		this.listaTabelas  = []
