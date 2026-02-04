@@ -494,15 +494,16 @@ module.exports = function() {
 		for (let e1 = primeiro_dia1;  e1 <= primeiro_dia2; e1++) {
 			let e = tabela1[e1]
 
+			if (typeof e.valor === 'undefined') {
+				e.valor = 0
+			}
+
 			// calcula pro-rata 
 			if ( (calc_prorata) && (n_item==0) ) {
 				e.valor = (e.valor / calcUtil.diasMes( dia0 )) * ( (calcUtil.dia2intDia( dia2 )  - calcUtil.dia2intDia( dia0 )) +1);
 			}
 			// fim calcula pro-rata
 			if ((calc_prorata) && (e1 == primeiro_dia2) && (n_item > 0) ) {
-				if (typeof e.valor === 'undefined') {
-					e.valor = 0
-				}
 				e.valor = (e.valor / calcUtil.diasMes( dia2original )) * calcUtil.dia2intDia( dia0 );	
 			}
 
