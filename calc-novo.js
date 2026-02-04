@@ -494,6 +494,10 @@ module.exports = function() {
 		for (let e1 = primeiro_dia1;  e1 <= primeiro_dia2; e1++) {
 			let e = tabela1[e1]
 
+			if (typeof e === 'undefined') {
+				e = { dia: e1, valor: 0 }
+			}
+
 			if (typeof e.valor === 'undefined') {
 				e.valor = 0
 			}
