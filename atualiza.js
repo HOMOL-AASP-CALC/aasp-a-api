@@ -466,11 +466,11 @@ app.get('/s'+porta_api.toString()+'/pdf/:id', async function(req, res) {
 	}
 	var p1 = permissao1.find( x => x.id == c.v_id_dono )
 
-	if (typeof p1 === 'undefined' || p1 == null) {
-		console.log('sem permissão para acessao o cálculo')
-		res.send( {sucess:0,erro: 'sem permissão para acessao o cálculo'} )
-		return;
-	}
+	// if (typeof p1 === 'undefined' || p1 == null) {
+	// 	console.log('sem permissão para acessao o cálculo')
+	// 	res.send( {sucess:0,erro: 'sem permissão para acessao o cálculo'} )
+	// 	return;
+	// }
 
 	var id = req.params.id
 
