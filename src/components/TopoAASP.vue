@@ -201,7 +201,7 @@
 
             <a :href="url+`/fale-conosco`" class="mdl-layout__tab mdl-cell--hide-phone  mdl-cell--hide-tablet topo_opc1 mdl-color-text--grey-200">Suporte</a>
 
-            <a class="mdl-layout__tab mdl-cell--hide-phone  mdl-cell--hide-tablet topo_opc1 mdl-color-text--grey-200"  target='_blank' href='https://wa.me/message/GSVKJJLREHYDO1'>Atendimento</a>
+            <a class="mdl-layout__tab mdl-cell--hide-phone  mdl-cell--hide-tablet topo_opc1 mdl-color-text--grey-200"  target='_blank' href='https://wa.me/5511941180516'>Atendimento</a>
 
         </div>
 
