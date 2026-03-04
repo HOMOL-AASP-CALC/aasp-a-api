@@ -605,10 +605,74 @@ app.post('/calculosDiversos/tabelaDireta',  async function(req, res) {
     res.send( r )
 })
 
+
+
+
+app.get('/calculosDiversos/pdfA/:versao/:tipo/:idCalc',  async function(req, res) {
+    
+    let versao = req.params.versao
+    let tipo = req.params.tipo
+    let idCalc = req.params.idCalc
+    let pasta = process.env.pasta_atualiza_antigo + '/' + parseInt(idCalc / 10000)
+
+    if (tipo == 'TRAB') {
+        pasta = process.env.pasta_trabalhista_antigo + '/' + parseInt(idCalc / 10000)
+    }
+
+    let c = cookie_uncrypt( req.cookies['c_v_app'] )
+
+    try {
+        const [rows] = await conCalculos.promise().query('SELECT id_login FROM atualizacaoMonetaria WHERE id = ? LIMIT 1',[idCalc]);
+
+        if (!rows || rows.length === 0) {
+            res.send({ sucesso: 0, msg: 'calculo_nao_encontrado' });
+            return;
+        }
+
+        if (rows[0].id_login != c.v_id_dono) {
+            res.send({ sucesso: 0, msg: 'sem_permissao' });
+            return;
+        }
+
+        try {
+            const nomeArquivo = `${pasta}/${idCalc}.${versao}.${tipo}`;
+            console.log('tentando ler arquivo: ', nomeArquivo)
+            if (!fs.existsSync(nomeArquivo)) {
+                res.status(404).send({ sucesso: 0, msg: 'arquivo_nao_encontrado' });
+                return;
+            }
+            if (tipo == 'pdf') {
+                const pdfBuffer = await fs.promises.readFile(nomeArquivo);
+                res.writeHead(200, {
+                    'Content-Type': 'application/pdf',
+                    'Content-Length': pdfBuffer.length
+                });
+                res.end(pdfBuffer);
+               return;
+            } else {
+                const htmlContent = await fs.promises.readFile(nomeArquivo);
+                res.send(htmlContent);
+                return;
+            }
+        } catch (err) {
+            console.error('erro lendo arquivo:', err);
+            res.status(500).send({ sucesso: 0, msg: 'erro_ler_arquivo' });
+            return;
+        }
+
+    } catch (err) {
+        console.error('erro consulta lista_calculo:', err);
+        res.send({ sucesso: 0, msg: 'erro_consulta' });
+        return;
+    }
+})
+
+
 app.get('/calculosDiversos/pdfT4/:tipo/:idCalc',  async function(req, res) {
     let tipo = req.params.tipo
     let idCalc = req.params.idCalc
     let pasta = process.env.pasta_trabalhista_antigo + '/' + parseInt(idCalc / 10000)
+
     let c = cookie_uncrypt( req.cookies['c_v_app'] )
 
     try {
